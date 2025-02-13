@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FundAntivirus")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f6ba931a01a8e37a3817f0bc8591b631a84a5157")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2111697bf5f4f35fa9b175dd7a37608b0e213757")]
 [assembly: System.Reflection.AssemblyProductAttribute("FundAntivirus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FundAntivirus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
