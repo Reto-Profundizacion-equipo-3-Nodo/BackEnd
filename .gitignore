@@ -4,7 +4,7 @@
 [Dd]ist/
 [Dd]ebug/ (o /obj/)
 bin/
-obj/
+obj
 
 ## User-specific files
 .idea/
