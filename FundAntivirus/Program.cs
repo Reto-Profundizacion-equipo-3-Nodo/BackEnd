@@ -38,6 +38,8 @@ builder.Services.AddScoped<AuthService>();
 //Add Controllers
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<IInstitutionService, InstitutionService>();
+
 //Configure Swagger
 builder.Services.AddSwaggerGen(c =>
     {

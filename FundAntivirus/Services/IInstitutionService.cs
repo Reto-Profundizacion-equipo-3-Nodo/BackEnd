@@ -1,4 +1,5 @@
 using FundAntivirus.Models;
+using FundAntivirus.DTOs;
 
 namespace FundAntivirus.Services
 {
