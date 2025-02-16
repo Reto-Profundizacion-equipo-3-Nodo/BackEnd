@@ -34,7 +34,3 @@ namespace FundAntivirus.DTOs
         public string? Description { get; set; }
     }
 }
-
-
-
-
