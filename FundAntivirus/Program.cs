@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using FundAntivirus.Data;
 using FundAntivirus.Services;
 using System.Text;
+using FundAntivirus.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +48,7 @@ builder.Services.AddSwaggerGen(c =>
         c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
             Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                Name = "Authorization",
+            Name = "Authorization",
             In = ParameterLocation.Header,
             Type = SecuritySchemeType.Http,
             Scheme = "Bearer",
@@ -73,11 +74,12 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
     );
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 var app = builder.Build();
 
 // Enable middleware to serve generated Swagger as a JSON endpoint in developer.
-if(app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FundAntivirus v1"));

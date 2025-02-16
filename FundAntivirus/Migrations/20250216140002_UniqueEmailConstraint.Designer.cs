@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FundAntivirus.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250213160224_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250216140002_UniqueEmailConstraint")]
+    partial class UniqueEmailConstraint
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,9 +34,13 @@ namespace FundAntivirus.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -44,13 +48,12 @@ namespace FundAntivirus.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("User");
                 });
 #pragma warning restore 612, 618
         }

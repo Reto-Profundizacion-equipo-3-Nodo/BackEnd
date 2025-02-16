@@ -14,8 +14,8 @@ namespace FundAntivirus.Services
         public string GenerateToken(User user)
         {
             var claims = new[] {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Role, user.Role.ToLower()) //Permite que token lleve la informacion del role del usuario y genere el token en minusculas
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
