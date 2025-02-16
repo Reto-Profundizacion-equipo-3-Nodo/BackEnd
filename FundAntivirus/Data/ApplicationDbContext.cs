@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using FundAntivirus.Models;
+
 namespace FundAntivirus.Data
 {
     public class ApplicationDbContext : DbContext
@@ -8,5 +9,12 @@ namespace FundAntivirus.Data
         {
         }
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Category> Categories {get;set;}
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

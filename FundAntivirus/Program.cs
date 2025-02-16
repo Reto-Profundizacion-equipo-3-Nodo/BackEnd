@@ -4,14 +4,21 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using FundAntivirus.Data;
 using FundAntivirus.Services;
+using FundAntivirus.Repositories; // <-- Se agregó el using para los repositorios
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure authentication with JWT
-var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
+// Obtener configuración JWT
+var jwtConfig = builder.Configuration.GetSection("Jwt");
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+// Validar que la clave JWT no sea null
+var jwtKey = jwtConfig["Key"] ?? throw new InvalidOperationException("JWT Key is missing.");
+var key = Encoding.UTF8.GetBytes(jwtKey);
+
+// Configurar autenticación con JWT
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -20,70 +27,69 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer = jwtConfig["Issuer"],
+            ValidAudience = jwtConfig["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
     });
 
-builder.Services.AddAuthentication();
-
-//Configure DbContext with PostgreSQL
+// Configurar DbContext con PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//Register auth service
+// Registrar servicios de la aplicación
 builder.Services.AddScoped<AuthService>();
 
-//Add Controllers
+// 🚀 SE AGREGA REGISTRO DEL REPOSITORIO PARA CORREGIR EL ERROR 🚀
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+// Agregar controladores
 builder.Services.AddControllers();
 
-//Configure Swagger
-builder.Services.AddSwaggerGen(c =>
+// Configurar Swagger con autenticación JWT
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
     {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "FundAntivirus", Version = "v1" });
-
-        // Configure JWT Bearer Auth for Swagger
-        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                Name = "Authorization",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.Http,
-            Scheme = "Bearer",
-            BearerFormat = "JWT"
-        });
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+        Title = "FundAntivirus API",
+        Version = "v1",
+        Description = "API para la gestión de FundAntivirus"
     });
 
-// Configure EF Core with PostgreSQL
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-    );
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Ingrese el token en el formato: Bearer {token}",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+    };
+
+    options.AddSecurityDefinition("Bearer", securityScheme);
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { securityScheme, new string[] { } }
+    });
+});
 
 var app = builder.Build();
 
-// Enable middleware to serve generated Swagger as a JSON endpoint in developer.
-if(app.Environment.IsDevelopment())
+// Configurar middlewares
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FundAntivirus v1"));
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "FundAntivirus API v1");
+    });
 }
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();
+
