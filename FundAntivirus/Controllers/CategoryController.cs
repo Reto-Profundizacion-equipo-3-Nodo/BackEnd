@@ -6,7 +6,6 @@ using FundAntivirus.Models;
 using FundAntivirus.DTOs;
 using FundAntivirus.Repositories;
 using System;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace FundAntivirus.Controllers
 {
@@ -23,9 +22,6 @@ namespace FundAntivirus.Controllers
 
         /// <summary> Obtiene todas las categorías. </summary>
         [HttpGet]
-        [SwaggerOperation(Summary = "Obtiene todas las categorías", Description = "Devuelve una lista de categorías disponibles en la base de datos.")]
-        [SwaggerResponse(200, "Lista de categorías obtenida exitosamente", typeof(IEnumerable<CategoryResponseDTO>))]
-        [SwaggerResponse(500, "Error interno del servidor")]
         public async Task<ActionResult<IEnumerable<CategoryResponseDTO>>> GetCategories()
         {
             try
@@ -41,10 +37,6 @@ namespace FundAntivirus.Controllers
 
         /// <summary> Obtiene una categoría por su ID. </summary>
         [HttpGet("{id}")]
-        [SwaggerOperation(Summary = "Obtiene una categoría por ID", Description = "Busca una categoría específica en la base de datos.")]
-        [SwaggerResponse(200, "Categoría encontrada", typeof(CategoryResponseDTO))]
-        [SwaggerResponse(404, "Categoría no encontrada")]
-        [SwaggerResponse(500, "Error interno del servidor")]
         public async Task<ActionResult<CategoryResponseDTO>> GetCategoryById(int id)
         {
             try
@@ -60,10 +52,6 @@ namespace FundAntivirus.Controllers
 
         /// <summary> Crea una nueva categoría. </summary>
         [HttpPost]
-        [SwaggerOperation(Summary = "Crea una nueva categoría", Description = "Registra una nueva categoría en la base de datos.")]
-        [SwaggerResponse(201, "Categoría creada correctamente", typeof(CategoryResponseDTO))]
-        [SwaggerResponse(400, "Datos inválidos o categoría duplicada")]
-        [SwaggerResponse(500, "Error interno del servidor")]
         public async Task<ActionResult<CategoryResponseDTO>> CreateCategory([FromBody] CategoryCreateDTO categoryDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -94,11 +82,6 @@ namespace FundAntivirus.Controllers
 
         /// <summary> Actualiza una categoría existente. </summary>
         [HttpPut("{id}")]
-        [SwaggerOperation(Summary = "Actualiza una categoría", Description = "Modifica una categoría en la base de datos.")]
-        [SwaggerResponse(200, "Categoría actualizada", typeof(CategoryResponseDTO))]
-        [SwaggerResponse(400, "Datos inválidos o conflicto de ID")]
-        [SwaggerResponse(404, "Categoría no encontrada")]
-        [SwaggerResponse(500, "Error interno del servidor")]
         public async Task<ActionResult<CategoryResponseDTO>> UpdateCategory(int id, [FromBody] CategoryUpdateDTO categoryDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -131,10 +114,6 @@ namespace FundAntivirus.Controllers
 
         /// <summary> Elimina una categoría por su ID. </summary>
         [HttpDelete("{id}")]
-        [SwaggerOperation(Summary = "Elimina una categoría", Description = "Borra una categoría de la base de datos por su ID.")]
-        [SwaggerResponse(204, "Categoría eliminada correctamente")]
-        [SwaggerResponse(404, "Categoría no encontrada")]
-        [SwaggerResponse(500, "Error interno del servidor")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try
@@ -164,3 +143,6 @@ namespace FundAntivirus.Controllers
             StatusCode(500, new { message = "Error interno del servidor", error = ex.Message });
     }
 }
+
+
+

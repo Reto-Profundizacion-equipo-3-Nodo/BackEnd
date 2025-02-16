@@ -4,126 +4,92 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using FundAntivirus.Data;
 using FundAntivirus.Services;
-using FundAntivirus.Repositories;
+using FundAntivirus.Repositories; // <-- Se agregó el using para los repositorios
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ==================== CONFIGURACIÓN DE SERVICIOS ====================
-ConfigureServices(builder.Services, builder.Configuration);
+// Obtener configuración JWT
+var jwtConfig = builder.Configuration.GetSection("Jwt");
+
+// Validar que la clave JWT no sea null
+var jwtKey = jwtConfig["Key"] ?? throw new InvalidOperationException("JWT Key is missing.");
+var key = Encoding.UTF8.GetBytes(jwtKey);
+
+// Configurar autenticación con JWT
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtConfig["Issuer"],
+            ValidAudience = jwtConfig["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
+
+// Configurar DbContext con PostgreSQL
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Registrar servicios de la aplicación
+builder.Services.AddScoped<AuthService>();
+
+// 🚀 SE AGREGA REGISTRO DEL REPOSITORIO PARA CORREGIR EL ERROR 🚀
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+// Agregar controladores
+builder.Services.AddControllers();
+
+// Configurar Swagger con autenticación JWT
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "FundAntivirus API",
+        Version = "v1",
+        Description = "API para la gestión de FundAntivirus"
+    });
+
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Ingrese el token en el formato: Bearer {token}",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+    };
+
+    options.AddSecurityDefinition("Bearer", securityScheme);
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { securityScheme, new string[] { } }
+    });
+});
 
 var app = builder.Build();
 
-// ==================== CONFIGURACIÓN DE MIDDLEWARES ====================
-ConfigureMiddleware(app);
+// Configurar middlewares
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "FundAntivirus API v1");
+    });
+}
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
 
-// ==================== MÉTODOS AUXILIARES ====================
-void ConfigureServices(IServiceCollection services, IConfiguration configuration)
-{
-    // ========= CONFIGURACIÓN DE AUTENTICACIÓN JWT =========
-    var jwtConfig = configuration.GetSection("Jwt");
-    var jwtKey = jwtConfig["Key"] ?? throw new InvalidOperationException("JWT Key is missing.");
-    var key = Encoding.UTF8.GetBytes(jwtKey);
-
-    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtConfig["Issuer"],
-                ValidAudience = jwtConfig["Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(key)
-            };
-        });
-
-    // ========= CONFIGURACIÓN DE BASE DE DATOS =========
-    services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-
-    // ========= REGISTRO DE SERVICIOS =========
-    services.AddScoped<AuthService>();
-    services.AddScoped<ICategoryRepository, CategoryRepository>();
-
-    // ========= CONFIGURACIÓN DE CONTROLADORES =========
-    services.AddControllers().AddDataAnnotationsLocalization();
-
-    // ========= CONFIGURACIÓN DE SWAGGER =========
-    services.AddEndpointsApiExplorer();
-    services.AddSwaggerGen(options =>
-    {
-        options.SwaggerDoc("v1", new OpenApiInfo
-        {
-            Title = "FundAntivirus API",
-            Version = "v1",
-            Description = "API para la gestión de FundAntivirus"
-        });
-
-        var securityScheme = new OpenApiSecurityScheme
-        {
-            Name = "Authorization",
-            Description = "Ingrese el token en el formato: Bearer {token}",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.Http,
-            Scheme = "Bearer",
-            BearerFormat = "JWT",
-            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-        };
-
-        options.AddSecurityDefinition("Bearer", securityScheme);
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            { securityScheme, new string[] { } }
-        });
-    });
-}
-
-void ConfigureMiddleware(WebApplication app)
-{
-    // ========= SWAGGER (Solo en entorno de desarrollo) =========
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "FundAntivirus API v1");
-        });
-    }
-
-    // ========= AUTENTICACIÓN Y AUTORIZACIÓN =========
-    app.UseAuthentication();
-    app.UseAuthorization();
-
-    // ========= MIDDLEWARE PERSONALIZADO PARA VALIDACIÓN DE MODELO =========
-    app.Use(async (context, next) =>
-    {
-        var actionContext = context.RequestServices.GetRequiredService<Microsoft.AspNetCore.Mvc.Infrastructure.IActionContextAccessor>()
-            .ActionContext;
-
-        if (actionContext?.ModelState != null && !actionContext.ModelState.IsValid)
-        {
-            context.Response.StatusCode = 400;
-            await context.Response.WriteAsJsonAsync(new
-            {
-                message = "Solicitud inválida",
-                errors = actionContext.ModelState
-                    .Where(x => x.Value!.Errors.Any())
-                    .ToDictionary(k => k.Key, v => v.Value!.Errors.Select(e => e.ErrorMessage).ToArray())
-            });
-            return;
-        }
-
-        await next();
-    });
-
-    // ========= MAPEO DE CONTROLADORES =========
-    app.MapControllers();
-}
-
-// Clase parcial necesaria para las pruebas de integración
-public partial class Program { }
