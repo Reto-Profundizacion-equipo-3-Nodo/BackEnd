@@ -26,7 +26,6 @@ namespace FundAntivirus.Models
         /// <summary>
         /// Descripción de la categoría (opcional, con un máximo de 255 caracteres).
         /// </summary>
-        [Required(ErrorMessage = "La descripción es obligatoria.")]
         [StringLength(255, ErrorMessage = "La descripción no puede tener más de 255 caracteres.")]
         public string? Description { get; set; } // 🔹 Se permite nulo, ya que algunas categorías podrían no tener descripción
     }
