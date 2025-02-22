@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using FundAntivirus.Data;
 using FundAntivirus.Services;
 using System.Text;
+using FundAntivirus.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,11 +35,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 //Register auth service
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IDonationRepository, DonationRepository>();
 
 //Add Controllers
 builder.Services.AddControllers();
 
+
+
 //Configure Swagger
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
     {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "FundAntivirus", Version = "v1" });
