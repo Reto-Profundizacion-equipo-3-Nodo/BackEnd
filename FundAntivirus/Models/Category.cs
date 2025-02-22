@@ -19,16 +19,14 @@ namespace FundAntivirus.Models
         /// <summary>
         /// Nombre de la categoría (obligatorio, con un máximo de 100 caracteres).
         /// </summary>
-        [Required]
-        [MaxLength(100)]
+        [Required(ErrorMessage = "El nombre de la categoría es obligatorio.")] // 🔹 Mensaje de error personalizado
+        [MaxLength(100, ErrorMessage = "El nombre no puede tener más de 100 caracteres.")] // 🔹 Longitud máxima
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Descripción de la categoría (opcional, con un máximo de 255 caracteres).
         /// </summary>
-        [StringLength(255, ErrorMessage = "La descripción no puede tener más de 255 caracteres.")]
+        [StringLength(255, ErrorMessage = "La descripción no puede tener más de 255 caracteres.")] // 🔹 Validación de longitud
         public string? Description { get; set; } // 🔹 Se permite nulo, ya que algunas categorías podrían no tener descripción
     }
 }
-
-
