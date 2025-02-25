@@ -1,8 +1,7 @@
 using FundAntivirus.DTO;
 using FundAntivirus.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FundAntivirus.Controllers
 {
@@ -32,6 +31,7 @@ namespace FundAntivirus.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BootcampInstitutionDTO>> Create([FromBody] BootcampInstitutionDTO dto)
         {
             if (dto == null) return BadRequest();
@@ -40,6 +40,7 @@ namespace FundAntivirus.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, [FromBody] BootcampInstitutionDTO dto)
         {
             if (dto == null) return BadRequest();
@@ -49,6 +50,7 @@ namespace FundAntivirus.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var success = await _service.DeleteAsync(id);

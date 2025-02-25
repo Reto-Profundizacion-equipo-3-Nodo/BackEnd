@@ -1,7 +1,5 @@
 using FundAntivirus.DTO;
 using FundAntivirus.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FundAntivirus.Services
 {
