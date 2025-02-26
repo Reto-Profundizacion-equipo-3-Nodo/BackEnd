@@ -20,8 +20,15 @@ namespace FundAntivirus.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        /// <summary> Obtiene todas las categorías. </summary>
+        /// <summary>
+        /// Obtiene todas las categorías disponibles.
+        /// </summary>
+        /// <returns>Lista de categorías.</returns>
+        /// <response code="200">Devuelve la lista de categorías.</response>
+        /// <response code="500">Error interno del servidor.</response>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<CategoryResponseDTO>), 200)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult<IEnumerable<CategoryResponseDTO>>> GetCategories()
         {
             try
@@ -35,8 +42,18 @@ namespace FundAntivirus.Controllers
             }
         }
 
-        /// <summary> Obtiene una categoría por su ID. </summary>
+        /// <summary>
+        /// Obtiene una categoría por su ID.
+        /// </summary>
+        /// <param name="id">ID de la categoría a buscar.</param>
+        /// <returns>Datos de la categoría encontrada.</returns>
+        /// <response code="200">Devuelve la categoría solicitada.</response>
+        /// <response code="404">No se encontró la categoría con el ID proporcionado.</response>
+        /// <response code="500">Error interno del servidor.</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(CategoryResponseDTO), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult<CategoryResponseDTO>> GetCategoryById(int id)
         {
             try
@@ -50,8 +67,18 @@ namespace FundAntivirus.Controllers
             }
         }
 
-        /// <summary> Crea una nueva categoría. </summary>
+        /// <summary>
+        /// Crea una nueva categoría en el sistema.
+        /// </summary>
+        /// <param name="categoryDto">Datos de la nueva categoría.</param>
+        /// <returns>La categoría creada.</returns>
+        /// <response code="201">Categoría creada exitosamente.</response>
+        /// <response code="400">Error de validación en los datos proporcionados.</response>
+        /// <response code="500">Error interno del servidor.</response>
         [HttpPost]
+        [ProducesResponseType(typeof(CategoryResponseDTO), 201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult<CategoryResponseDTO>> CreateCategory([FromBody] CategoryCreateDTO categoryDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -80,8 +107,21 @@ namespace FundAntivirus.Controllers
             }
         }
 
-        /// <summary> Actualiza una categoría existente. </summary>
+        /// <summary>
+        /// Actualiza una categoría existente.
+        /// </summary>
+        /// <param name="id">ID de la categoría a actualizar.</param>
+        /// <param name="categoryDto">Datos nuevos de la categoría.</param>
+        /// <returns>La categoría actualizada.</returns>
+        /// <response code="200">Categoría actualizada exitosamente.</response>
+        /// <response code="400">El ID de la categoría no coincide con el de la solicitud.</response>
+        /// <response code="404">No se encontró la categoría con el ID proporcionado.</response>
+        /// <response code="500">Error interno del servidor.</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(CategoryResponseDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult<CategoryResponseDTO>> UpdateCategory(int id, [FromBody] CategoryUpdateDTO categoryDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -112,8 +152,17 @@ namespace FundAntivirus.Controllers
             }
         }
 
-        /// <summary> Elimina una categoría por su ID. </summary>
+        /// <summary>
+        /// Elimina una categoría por su ID.
+        /// </summary>
+        /// <param name="id">ID de la categoría a eliminar.</param>
+        /// <response code="204">Categoría eliminada exitosamente.</response>
+        /// <response code="404">No se encontró la categoría con el ID proporcionado.</response>
+        /// <response code="500">Error interno del servidor.</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try
@@ -143,6 +192,3 @@ namespace FundAntivirus.Controllers
             StatusCode(500, new { message = "Error interno del servidor", error = ex.Message });
     }
 }
-
-
-

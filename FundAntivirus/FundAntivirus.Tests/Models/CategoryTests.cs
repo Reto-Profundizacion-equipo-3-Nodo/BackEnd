@@ -40,4 +40,3 @@ namespace FundAntivirus.Tests.Models
         }
     }
 }
-

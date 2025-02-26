@@ -4,19 +4,25 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using FundAntivirus.Data;
 using FundAntivirus.Services;
-using FundAntivirus.Repositories; // <-- Se agregó el using para los repositorios
+using FundAntivirus.Repositories; // Se agregan los repositorios
 using System.Text;
+
+// ==========================================================
+// FundAntivirus API - Configuración principal
+// Este archivo inicializa la autenticación JWT, el contexto 
+// de base de datos, los servicios, repositorios y Swagger.
+// ==========================================================
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Obtener configuración JWT
+// 🔹 Obtener configuración JWT desde appsettings.json
 var jwtConfig = builder.Configuration.GetSection("Jwt");
 
-// Validar que la clave JWT no sea null
+// 🔹 Validar que la clave JWT no sea nula
 var jwtKey = jwtConfig["Key"] ?? throw new InvalidOperationException("JWT Key is missing.");
 var key = Encoding.UTF8.GetBytes(jwtKey);
 
-// Configurar autenticación con JWT
+// 🔹 Configurar autenticación con JWT
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -33,20 +39,22 @@ builder.Services
         };
     });
 
-// Configurar DbContext con PostgreSQL
+// 🔹 Configurar DbContext con PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Registrar servicios de la aplicación
+// 🔹 Registrar servicios de la aplicación
 builder.Services.AddScoped<AuthService>();
 
-// 🚀 SE AGREGA REGISTRO DEL REPOSITORIO PARA CORREGIR EL ERROR 🚀
+// 🔹 Registrar repositorios y servicios relacionados con categorías y oportunidades
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IOpportunityService, OpportunityService>();
+builder.Services.AddScoped<IOpportunityRepository, OpportunityRepository>();
 
-// Agregar controladores
+// 🔹 Agregar soporte para controladores en la API
 builder.Services.AddControllers();
 
-// Configurar Swagger con autenticación JWT
+// 🔹 Configurar Swagger para documentación de la API con autenticación JWT
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -56,6 +64,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "API para la gestión de FundAntivirus"
     });
 
+    // Configuración de seguridad para Swagger
     var securityScheme = new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -76,7 +85,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Configurar middlewares
+// 🔹 Configurar middlewares y entorno de desarrollo
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -86,10 +95,12 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// 🔹 Activar autenticación y autorización en la API
 app.UseAuthentication();
 app.UseAuthorization();
 
+// 🔹 Mapear controladores de la API
 app.MapControllers();
 
+// 🔹 Ejecutar la aplicación
 app.Run();
-

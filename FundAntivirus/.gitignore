@@ -1,0 +1,60 @@
+## Ignore build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ist/
+[Dd]ebug/ (o /obj/)
+bin/
+obj
+
+## User-specific files
+.idea/
+.vscode/
+
+## User-specific files (Windows)
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer files for .NET Core runtime
+*.appx
+*.appxbundle
+*.vsix
+
+# Windows image file
+*.iso
+
+## Windows Installer log files
+*.log
+
+# Windows Installer cache files
+*.cab
+
+# Windows Installer files
+*.msi
+*.msp
+*.appx
+
+## User-specific files (Mac)
+.DS_Store
+
+## Windows file system thumbnails
+Thumbs.db
+ehthumbs.db
+
+## .NET Core files
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## ASP.NET temporary files
+# Uncomment if you have a global.asax
+# global.asax~
+
+# ASP.NET session files
+#sessionstate/
+
+# Web.config files
+#appsettings.json
+#web.config
