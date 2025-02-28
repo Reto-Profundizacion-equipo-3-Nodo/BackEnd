@@ -38,6 +38,8 @@ builder.Services.AddScoped<AuthService>();
 //Add Controllers
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<IInstitutionService, InstitutionService>();
+
 //Configure Swagger
 builder.Services.AddSwaggerGen(c =>
     {
@@ -77,11 +79,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 var app = builder.Build();
 
 // Enable middleware to serve generated Swagger as a JSON endpoint in developer.
-if(app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FundAntivirus v1"));
-}
+// if(app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FundAntivirus v1"));
+// }
+app.UseSwagger();
+app.UseSwaggerUI(c => {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "FundAntivirus v1");
+    c.RoutePrefix = string.Empty;
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

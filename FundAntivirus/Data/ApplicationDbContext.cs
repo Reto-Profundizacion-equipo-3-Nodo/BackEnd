@@ -8,5 +8,7 @@ namespace FundAntivirus.Data
         {
         }
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Institution> Institutions { get; set; }
     }
 }
