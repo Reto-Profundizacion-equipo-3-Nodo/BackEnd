@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "otdehX80bo9Ytw3Qle9sbsqwRsAzrN5T/faZ2EXnazs=",
+  "Source": "FundAntivirus",
+  "BasePath": "_content/FundAntivirus",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
