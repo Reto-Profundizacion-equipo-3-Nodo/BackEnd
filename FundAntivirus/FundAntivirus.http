@@ -1,0 +1,6 @@
+@FundAntivirus_HostAddress = http://localhost:5218
+
+GET {{FundAntivirus_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,26 +1,60 @@
-# Build output
-/FundacionAntivirus/obj/
-/FundacionAntivirus/bin/
+## Ignore build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ist/
+[Dd]ebug/ (o /obj/)
+bin/
+obj
 
-# User-specific files
+## User-specific files
+.idea/
 .vscode/
-*.user
-*.suo
-.ntvs
-*.njsproj
-*.sln.docstates
 
-# Logs
+## User-specific files (Windows)
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer files for .NET Core runtime
+*.appx
+*.appxbundle
+*.vsix
+
+# Windows image file
+*.iso
+
+## Windows Installer log files
 *.log
-logs/
 
-# Package dependencies
-packages/
-node_modules/
+# Windows Installer cache files
+*.cab
 
-# System files
+# Windows Installer files
+*.msi
+*.msp
+*.appx
+
+## User-specific files (Mac)
 .DS_Store
-Thumbs.db
 
-# Fake build tool (si no usas FAKE, puedes quitarlo)
-/.fake
+## Windows file system thumbnails
+Thumbs.db
+ehthumbs.db
+
+## .NET Core files
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## ASP.NET temporary files
+# Uncomment if you have a global.asax
+# global.asax~
+
+# ASP.NET session files
+#sessionstate/
+
+# Web.config files
+#appsettings.json
+#web.config
