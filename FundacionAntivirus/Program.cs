@@ -1,4 +1,6 @@
 using FundacionAntivirus.Config;
+using FundacionAntivirus.Services;
+using FundacionAntivirus.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.ConfigureSwagger();
 builder.Services.ConfigureServices(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 app.UseSwagger();

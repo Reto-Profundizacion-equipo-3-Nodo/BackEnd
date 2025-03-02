@@ -1,6 +1,6 @@
 using FundacionAntivirus.Dto;
 
-namespace FundacionAntivirus.Interface
+namespace FundacionAntivirus.Interfaces
 {
     public interface IUsers
     {
@@ -9,5 +9,6 @@ namespace FundacionAntivirus.Interface
         Task CreateAsync(UsersRequestDto dto);
         Task UpdateAsync(int id, UsersRequestDto dto);
         Task DeleteAsync(int id);
+        Task<UsersResponseDto> LoginAsync(UsersRequestDto dto);
     }
 }

@@ -1,6 +1,7 @@
 
 using FundacionAntivirus.Dto;
-using FundacionAntivirus.Interface;
+using FundacionAntivirus.Interfaces;
+using FundacionAntivirus.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FundacionAntivirus.Controllers
@@ -10,13 +11,15 @@ namespace FundacionAntivirus.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsers _service;
+        private readonly IAuthService _authService;
 
-        public UsersController(IUsers service)
+        public UsersController(IUsers service, IAuthService authService)
         {
             _service = service;
+            _authService = authService;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<UsersResponseDto>>> GetAll()
         {
             var list = await _service.GetAllAsync();
@@ -34,7 +37,7 @@ namespace FundacionAntivirus.Controllers
             return Ok(dto);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<ActionResult<UsersResponseDto>> Create([FromBody] UsersRequestDto dto)
         {
             if (!ModelState.IsValid)
@@ -42,10 +45,11 @@ namespace FundacionAntivirus.Controllers
                 return BadRequest(ModelState);
             }
             await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(Get), dto);
+            return Ok(new { message = "User registered successfully" });
+            // return CreatedAtAction(nameof(Get), dto);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{Updatebyid}")]
         public async Task<ActionResult> Update(int id, [FromBody] UsersRequestDto dto)
         {
             var entity = await _service.GetByIdAsync(id);
@@ -66,6 +70,18 @@ namespace FundacionAntivirus.Controllers
             }
             await _service.DeleteAsync(id);
             return NoContent();
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<UsersResponseDto>> Login([FromBody] UsersRequestDto dto)
+        {
+            var userResponse = await _service.LoginAsync(dto);
+            if (userResponse == null)
+            {
+                return Unauthorized(new { message = "Invalid username or password" });
+            }
+            var token = _authService.GenerateJwt(userResponse);
+            return Ok(new { userResponse, token });
         }
     }
 }

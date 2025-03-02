@@ -2,8 +2,10 @@
 using AutoMapper;
 using FundacionAntivirus.Data;
 using FundacionAntivirus.Dto;
-using FundacionAntivirus.Interface;
+using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Models;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Services
@@ -23,9 +25,11 @@ namespace FundacionAntivirus.Services
         public async Task CreateAsync(UsersRequestDto dto)
         {
             var entity = _mapper.Map<users>(dto);
+            //Hashing the password using Mapper
+            entity.password = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(dto.Password)));
             _context.users.Add(entity);
             await _context.SaveChangesAsync();
-            _mapper.Map<UsersRequestDto>(entity);
+            // _mapper.Map<UsersRequestDto>(entity);
         }
 
         public async Task DeleteAsync(int id)
@@ -61,6 +65,15 @@ namespace FundacionAntivirus.Services
                 entity.rol = dto.Rol;
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<UsersResponseDto> LoginAsync(UsersRequestDto dto)
+        {
+            var hashedPassword = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(dto.Password)));
+            var entity = await _context.users
+                .FirstOrDefaultAsync(x => x.email == dto.Email && x.password == hashedPassword);
+
+            return entity !=null ? _mapper.Map<UsersResponseDto>(entity): null;
         }
     }
 }

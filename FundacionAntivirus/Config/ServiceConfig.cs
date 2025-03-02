@@ -1,5 +1,5 @@
 using FundacionAntivirus.Data;
-using FundacionAntivirus.Interface;
+using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Services;
 using Microsoft.EntityFrameworkCore;
 
