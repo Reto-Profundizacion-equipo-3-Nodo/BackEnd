@@ -1,7 +1,6 @@
 
 using FundacionAntivirus.Dto;
 using FundacionAntivirus.Interfaces;
-using FundacionAntivirus.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FundacionAntivirus.Controllers
@@ -70,18 +69,6 @@ namespace FundacionAntivirus.Controllers
             }
             await _service.DeleteAsync(id);
             return NoContent();
-        }
-
-        [HttpPost("login")]
-        public async Task<ActionResult<UsersResponseDto>> Login([FromBody] UsersRequestDto dto)
-        {
-            var userResponse = await _service.LoginAsync(dto);
-            if (userResponse == null)
-            {
-                return Unauthorized(new { message = "Invalid username or password" });
-            }
-            var token = _authService.GenerateJwt(userResponse);
-            return Ok(new { userResponse, token });
         }
     }
 }

@@ -26,7 +26,7 @@ namespace FundacionAntivirus.Services
         {
             var entity = _mapper.Map<users>(dto);
             //Hashing the password using Mapper
-            entity.password = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(dto.Password)));
+            entity.password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
             _context.users.Add(entity);
             await _context.SaveChangesAsync();
             // _mapper.Map<UsersRequestDto>(entity);
@@ -65,15 +65,6 @@ namespace FundacionAntivirus.Services
                 entity.rol = dto.Rol;
                 await _context.SaveChangesAsync();
             }
-        }
-
-        public async Task<UsersResponseDto> LoginAsync(UsersRequestDto dto)
-        {
-            var hashedPassword = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(dto.Password)));
-            var entity = await _context.users
-                .FirstOrDefaultAsync(x => x.email == dto.Email && x.password == hashedPassword);
-
-            return entity !=null ? _mapper.Map<UsersResponseDto>(entity): null;
         }
     }
 }

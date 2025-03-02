@@ -9,6 +9,5 @@ namespace FundacionAntivirus.Interfaces
         Task CreateAsync(UsersRequestDto dto);
         Task UpdateAsync(int id, UsersRequestDto dto);
         Task DeleteAsync(int id);
-        Task<UsersResponseDto> LoginAsync(UsersRequestDto dto);
     }
 }
