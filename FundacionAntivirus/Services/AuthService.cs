@@ -34,10 +34,10 @@ namespace FundacionAntivirus.Services
                 throw new UnauthorizedAccessException("Rol no permitido. Solo se permiten 'user' o 'admin'.");
             }
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-            var entity = await _context.users
+            var entity = await _context.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.email == dto.Email);
-            if (entity == null || !BCrypt.Net.BCrypt.Verify(dto.Password, entity.password))
+                .FirstOrDefaultAsync(x => x.Email == dto.Email);
+            if (entity == null || !BCrypt.Net.BCrypt.Verify(dto.Password, entity.Password))
             {
                 throw new UnauthorizedAccessException("Credencaiels invalidas");
             }
@@ -54,16 +54,16 @@ namespace FundacionAntivirus.Services
                 throw new UnauthorizedAccessException("Rol no permitido. Solo se permiten 'user' o 'admin'.");
             }
             //Verificar si el usuario existe en DB
-            var existingUser = await _context.users
+            var existingUser = await _context.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.email == dto.Email);
+                .FirstOrDefaultAsync(x => x.Email == dto.Email);
             if (existingUser != null)
             {
                 throw new UnauthorizedAccessException("El usuario ya esta registrado");
             }
-            var entity = _mapper.Map<users>(dto);
-            entity.password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-            _context.users.Add(entity);
+            var entity = _mapper.Map<Users>(dto);
+            entity.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            _context.Users.Add(entity);
             await _context.SaveChangesAsync();
             return _mapper.Map<UsersResponseDto>(entity);
         }

@@ -16,21 +16,21 @@ public partial class AppDbContext : DbContext
     {
     }
 
-    public virtual DbSet<bootcamp_topics> bootcamp_topics { get; set; }
+    public virtual DbSet<BootcampTopics> BootcampTopics { get; set; }
 
-    public virtual DbSet<bootcamps> bootcamps { get; set; }
+    public virtual DbSet<Bootcamps> Bootcamps { get; set; }
 
-    public virtual DbSet<categories> categories { get; set; }
+    public virtual DbSet<Categories> Categories { get; set; }
 
-    public virtual DbSet<institutions> institutions { get; set; }
+    public virtual DbSet<Institutions> Institutions { get; set; }
 
-    public virtual DbSet<opportunities> opportunities { get; set; }
+    public virtual DbSet<Opportunities> Opportunities { get; set; }
 
-    public virtual DbSet<topics> topics { get; set; }
+    public virtual DbSet<Topics> Topics { get; set; }
 
-    public virtual DbSet<user_opportunities> user_opportunities { get; set; }
+    public virtual DbSet<UserOpportunities> UserOpportunities { get; set; }
 
-    public virtual DbSet<users> users { get; set; }
+    public virtual DbSet<Users> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -38,64 +38,64 @@ public partial class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<bootcamp_topics>(entity =>
+        modelBuilder.Entity<BootcampTopics>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("bootcamp_topics_pkey");
+            entity.HasKey(e => e.Id).HasName("bootcamp_topics_pkey");
 
-            entity.HasOne(d => d.bootcamp).WithMany(p => p.bootcamp_topics).HasConstraintName("bootcamp_topics_bootcamp_id_fkey");
+            entity.HasOne(d => d.Bootcamp).WithMany(p => p.BootcampTopics).HasConstraintName("bootcamp_topics_bootcamp_id_fkey");
 
-            entity.HasOne(d => d.topic).WithMany(p => p.bootcamp_topics).HasConstraintName("bootcamp_topics_topic_id_fkey");
+            entity.HasOne(d => d.Topic).WithMany(p => p.BootcampTopics).HasConstraintName("bootcamp_topics_topic_id_fkey");
         });
 
-        modelBuilder.Entity<bootcamps>(entity =>
+        modelBuilder.Entity<Bootcamps>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("bootcamps_pkey");
+            entity.HasKey(e => e.Id).HasName("bootcamps_pkey");
 
-            entity.HasOne(d => d.institution).WithMany(p => p.bootcamps)
+            entity.HasOne(d => d.Institution).WithMany(p => p.Bootcamps)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("bootcamps_institution_id_fkey");
         });
 
-        modelBuilder.Entity<categories>(entity =>
+        modelBuilder.Entity<Categories>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("categories_pkey");
+            entity.HasKey(e => e.Id).HasName("categories_pkey");
         });
 
-        modelBuilder.Entity<institutions>(entity =>
+        modelBuilder.Entity<Institutions>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("institutions_pkey");
+            entity.HasKey(e => e.Id).HasName("institutions_pkey");
         });
 
-        modelBuilder.Entity<opportunities>(entity =>
+        modelBuilder.Entity<Opportunities>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("opportunities_pkey");
+            entity.HasKey(e => e.Id).HasName("opportunities_pkey");
 
-            entity.HasOne(d => d.category).WithMany(p => p.opportunities)
+            entity.HasOne(d => d.Category).WithMany(p => p.Opportunities)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("opportunities_category_id_fkey");
 
-            entity.HasOne(d => d.institution).WithMany(p => p.opportunities)
+            entity.HasOne(d => d.Institution).WithMany(p => p.Opportunities)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("opportunities_institution_id_fkey");
         });
 
-        modelBuilder.Entity<topics>(entity =>
+        modelBuilder.Entity<Topics>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("topics_pkey");
+            entity.HasKey(e => e.Id).HasName("topics_pkey");
         });
 
-        modelBuilder.Entity<user_opportunities>(entity =>
+        modelBuilder.Entity<UserOpportunities>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("user_opportunities_pkey");
+            entity.HasKey(e => e.Id).HasName("user_opportunities_pkey");
 
-            entity.HasOne(d => d.opportunity).WithMany(p => p.user_opportunities).HasConstraintName("user_opportunities_opportunity_id_fkey");
+            entity.HasOne(d => d.Opportunity).WithMany(p => p.UserOpportunities).HasConstraintName("user_opportunities_opportunity_id_fkey");
 
-            entity.HasOne(d => d.user).WithMany(p => p.user_opportunities).HasConstraintName("user_opportunities_user_id_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.UserOpportunities).HasConstraintName("user_opportunities_user_id_fkey");
         });
 
-        modelBuilder.Entity<users>(entity =>
+        modelBuilder.Entity<Users>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("users_pkey");
+            entity.HasKey(e => e.Id).HasName("users_pkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

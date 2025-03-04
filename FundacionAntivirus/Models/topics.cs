@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Models;
 
-public partial class topics
+public partial class Topics
 {
     [Key]
-    public int id { get; set; }
+    public int Id { get; set; }
 
     [StringLength(255)]
-    public string name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-    [InverseProperty("topic")]
-    public virtual ICollection<bootcamp_topics> bootcamp_topics { get; set; } = new List<bootcamp_topics>();
+    [InverseProperty("Topic")]
+    public virtual ICollection<BootcampTopics> BootcampTopics { get; set; } = new List<BootcampTopics>();
 }

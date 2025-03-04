@@ -9,8 +9,8 @@ namespace FundacionAntivirus.Mappers
     {
         public UsersProfile() 
         {
-            CreateMap<users, UsersResponseDto>().ReverseMap();
-            CreateMap<users, UsersRequestDto>().ReverseMap();
+            CreateMap<Users, UsersResponseDto>().ReverseMap();
+            CreateMap<Users, UsersRequestDto>().ReverseMap();
 
         }
     }

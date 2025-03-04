@@ -6,27 +6,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Models;
 
-public partial class institutions
+public partial class Institutions
 {
     [Key]
-    public int id { get; set; }
+    public int Id { get; set; }
 
     [StringLength(255)]
-    public string name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-    public string? ubication { get; set; }
+    public string? Ubication { get; set; }
 
-    public string? url_generalidades { get; set; }
+    public string? UrlGeneralidades { get; set; }
 
-    public string? url_oferta_academica { get; set; }
+    public string? UrlOfertaAcademica { get; set; }
 
-    public string? url_bienestar { get; set; }
+    public string? UrlBienestar { get; set; }
 
-    public string? url_admision { get; set; }
+    public string? UrlAdmision { get; set; }
 
-    [InverseProperty("institution")]
-    public virtual ICollection<bootcamps> bootcamps { get; set; } = new List<bootcamps>();
+    [InverseProperty("Institution")]
+    public virtual ICollection<Bootcamps> Bootcamps { get; set; } = new List<Bootcamps>();
 
-    [InverseProperty("institution")]
-    public virtual ICollection<opportunities> opportunities { get; set; } = new List<opportunities>();
+    [InverseProperty("Institution")]
+    public virtual ICollection<Opportunities> Opportunities { get; set; } = new List<Opportunities>();
 }

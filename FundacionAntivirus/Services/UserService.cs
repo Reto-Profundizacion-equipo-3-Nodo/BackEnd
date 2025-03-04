@@ -24,17 +24,17 @@ namespace FundacionAntivirus.Services
 
         public async Task CreateAsync(UsersRequestDto dto)
         {
-            var entity = _mapper.Map<users>(dto);
+            var entity = _mapper.Map<Users>(dto);
             //Hashing the password using Mapper
-            entity.password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-            _context.users.Add(entity);
+            entity.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            _context.Users.Add(entity);
             await _context.SaveChangesAsync();
             // _mapper.Map<UsersRequestDto>(entity);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _context.users.FindAsync(id);
+            var entity = await _context.Users.FindAsync(id);
             if (entity != null)
             {
                 _context.Remove(entity);
@@ -44,25 +44,25 @@ namespace FundacionAntivirus.Services
 
         public async Task<IEnumerable<UsersResponseDto>> GetAllAsync()
         {
-            var entities = await _context.users.ToListAsync();
+            var entities = await _context.Users.ToListAsync();
             return _mapper.Map<IEnumerable<UsersResponseDto>>(entities);
         }
 
         public async Task<UsersResponseDto> GetByIdAsync(int id)
         {
-            var entity = await _context.users.FindAsync(id);
+            var entity = await _context.Users.FindAsync(id);
             return _mapper.Map<UsersResponseDto>(entity);
         }
 
         public async Task UpdateAsync(int id, UsersRequestDto dto)
         {
-            var entity = await _context.users.FindAsync(id);
+            var entity = await _context.Users.FindAsync(id);
             if (entity != null)
             {
-                entity.name = dto.Name;
-                entity.email = dto.Email;
-                entity.password = dto.Password;
-                entity.rol = dto.Rol;
+                entity.Name = dto.Name;
+                entity.Email = dto.Email;
+                entity.Password = dto.Password;
+                entity.Rol = dto.Rol;
                 await _context.SaveChangesAsync();
             }
         }
