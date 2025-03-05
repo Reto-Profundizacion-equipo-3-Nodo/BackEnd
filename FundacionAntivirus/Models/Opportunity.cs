@@ -86,19 +86,16 @@ public partial class Opportunity
     /// Categoría a la que pertenece esta oportunidad.
     /// </summary>
     [ForeignKey("CategoryId")]
-    [InverseProperty("Opportunities")]
     public virtual Category? Category { get; set; }
 
     /// <summary>
     /// Institución que ofrece esta oportunidad.
     /// </summary>
     [ForeignKey("InstitutionId")]
-    [InverseProperty("Opportunities")]
     public virtual Institution? Institution { get; set; }
 
     /// <summary>
     /// Lista de usuarios que han aplicado a esta oportunidad.
     /// </summary>
-    [InverseProperty("Opportunity")]
     public virtual ICollection<UserOpportunity> UserOpportunities { get; set; } = new List<UserOpportunity>();
 }
