@@ -1,51 +1,67 @@
-using FundacionAntivirus.Data;
-using FundacionAntivirus.Models;
 using FundacionAntivirus.Interfaces;
+using FundacionAntivirus.Models;
+using FundacionAntivirus.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace FundacionAntivirus.Repositories;
-
-/// <summary>
-/// Repositorio para la gestión de oportunidades.
-/// </summary>
-public class OpportunityRepository : IOpportunityRepository
+namespace FundacionAntivirus.Repositories
 {
-    private readonly AppDbContext _context;
-
-    public OpportunityRepository(AppDbContext context)
+    /// <summary>
+    /// Repositorio para la gestión de oportunidades en la base de datos.
+    /// </summary>
+    public class OpportunityRepository : IOpportunityRepository
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    public async Task<IEnumerable<Opportunity>> GetAllAsync()
-    {
-        return await _context.Opportunities.ToListAsync();
-    }
-
-    public async Task<Opportunity?> GetByIdAsync(int id)
-    {
-        return await _context.Opportunities.FindAsync(id);
-    }
-
-    public async Task AddAsync(Opportunity opportunity)
-    {
-        await _context.Opportunities.AddAsync(opportunity);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateAsync(Opportunity opportunity)
-    {
-        _context.Opportunities.Update(opportunity);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteAsync(int id)
-    {
-        var opportunity = await _context.Opportunities.FindAsync(id);
-        if (opportunity != null)
+        /// <summary>
+        /// Constructor del repositorio de oportunidades.
+        /// </summary>
+        public OpportunityRepository(AppDbContext context)
         {
+            _context = context;
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<Opportunity>> GetAllAsync()
+        {
+            return await _context.Opportunities.ToListAsync();
+        }
+
+        /// <inheritdoc/>
+        public async Task<Opportunity?> GetByIdAsync(int id)
+        {
+            return await _context.Opportunities.FindAsync(id);
+        }
+
+        /// <inheritdoc/>
+        public async Task<Opportunity> AddAsync(Opportunity opportunity)
+        {
+            _context.Opportunities.Add(opportunity);
+            await _context.SaveChangesAsync();
+            return opportunity;
+        }
+
+        /// <inheritdoc/>
+        public async Task<Opportunity?> UpdateAsync(int id, Opportunity opportunity)
+        {
+            var existingOpportunity = await _context.Opportunities.FindAsync(id);
+            if (existingOpportunity == null) return null;
+
+            _context.Entry(existingOpportunity).CurrentValues.SetValues(opportunity);
+            await _context.SaveChangesAsync();
+            return existingOpportunity;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var opportunity = await _context.Opportunities.FindAsync(id);
+            if (opportunity == null) return false;
+
             _context.Opportunities.Remove(opportunity);
             await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
