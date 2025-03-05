@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Models;
 
-public partial class UserOpportunities
+public partial class UserOpportunity
 {
     [Key]
     public int Id { get; set; }
@@ -16,10 +16,10 @@ public partial class UserOpportunities
     public int OpportunityId { get; set; }
 
     [ForeignKey("OpportunityId")]
-    [InverseProperty("UserOpportunities")]
-    public virtual Opportunities Opportunity { get; set; } = null!;
+    [InverseProperty("UserOpportunity")]
+    public virtual Opportunity Opportunity { get; set; } = null!;
 
     [ForeignKey("UserId")]
-    [InverseProperty("UserOpportunities")]
-    public virtual Users User { get; set; } = null!;
+    [InverseProperty("UserOpportunity")]
+    public virtual User User { get; set; } = null!;
 }

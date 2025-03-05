@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Models;
 
-public partial class Categories
+public partial class Topic
 {
     [Key]
     public int Id { get; set; }
@@ -14,8 +14,6 @@ public partial class Categories
     [StringLength(255)]
     public string Name { get; set; } = null!;
 
-    public string? Description { get; set; }
-
-    [InverseProperty("Category")]
-    public virtual ICollection<Opportunities> Opportunities { get; set; } = new List<Opportunities>();
+    [InverseProperty("Topic")]
+    public virtual ICollection<BootcampTopic> BootcampTopics { get; set; } = new List<BootcampTopic>();
 }

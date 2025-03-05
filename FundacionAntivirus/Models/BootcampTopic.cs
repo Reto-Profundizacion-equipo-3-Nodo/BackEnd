@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FundacionAntivirus.Models;
 
-public partial class BootcampTopics
+public partial class BootcampTopic
 {
     [Key]
     public int Id { get; set; }
@@ -13,10 +13,10 @@ public partial class BootcampTopics
     public int TopicId { get; set; }
 
     [ForeignKey("BootcampId")]
-    [InverseProperty("BootcampTopics")]
-    public virtual Bootcamps Bootcamp { get; set; } = null!;
+    [InverseProperty("BootcampTopic")]
+    public virtual Bootcamp Bootcamp { get; set; } = null!;
 
     [ForeignKey("TopicId")]
-    [InverseProperty("BootcampTopics")]
-    public virtual Topics Topic { get; set; } = null!;
+    [InverseProperty("BootcampTopic")]
+    public virtual Topic Topic { get; set; } = null!;
 }

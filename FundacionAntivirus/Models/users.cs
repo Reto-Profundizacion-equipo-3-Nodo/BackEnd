@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FundacionAntivirus.Models;
 
 [Index("Email", Name = "users_email_key", IsUnique = true)]
-public partial class Users
+public partial class User
 {
     [Key]
     public int Id { get; set; }
@@ -25,5 +25,5 @@ public partial class Users
     public string Rol { get; set; } = null!;
 
     [InverseProperty("User")]
-    public virtual ICollection<UserOpportunities> UserOpportunities { get; set; } = new List<UserOpportunities>();
+    public virtual ICollection<UserOpportunity> UserOpportunities { get; set; } = new List<UserOpportunity>();
 }

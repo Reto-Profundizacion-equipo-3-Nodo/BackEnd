@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Models;
 
-public partial class Institutions
+public partial class Institution
 {
     [Key]
     public int Id { get; set; }
@@ -25,8 +25,8 @@ public partial class Institutions
     public string? UrlAdmision { get; set; }
 
     [InverseProperty("Institution")]
-    public virtual ICollection<Bootcamps> Bootcamps { get; set; } = new List<Bootcamps>();
+    public virtual ICollection<Bootcamp> Bootcamps { get; set; } = new List<Bootcamp>();
 
     [InverseProperty("Institution")]
-    public virtual ICollection<Opportunities> Opportunities { get; set; } = new List<Opportunities>();
+    public virtual ICollection<Opportunity> Opportunities { get; set; } = new List<Opportunity>();
 }

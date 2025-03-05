@@ -1,99 +1,113 @@
-﻿using System;
-using System.Collections.Generic;
-using FundacionAntivirus.Models;
+﻿using FundacionAntivirus.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Data;
 
 public partial class AppDbContext : DbContext
 {
-    public AppDbContext()
-    {
-    }
-
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
     }
 
-    public virtual DbSet<BootcampTopics> BootcampTopics { get; set; }
-
-    public virtual DbSet<Bootcamps> Bootcamps { get; set; }
-
-    public virtual DbSet<Categories> Categories { get; set; }
-
-    public virtual DbSet<Institutions> Institutions { get; set; }
-
-    public virtual DbSet<Opportunities> Opportunities { get; set; }
-
-    public virtual DbSet<Topics> Topics { get; set; }
-
-    public virtual DbSet<UserOpportunities> UserOpportunities { get; set; }
-
-    public virtual DbSet<Users> Users { get; set; }
+    public DbSet<BootcampTopic> BootcampTopics { get; set; } = null!;
+    public DbSet<Bootcamp> Bootcamps { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
+    public DbSet<Institution> Institutions { get; set; } = null!;
+    public DbSet<Opportunity> Opportunities { get; set; } = null!;
+    public DbSet<Topic> Topics { get; set; } = null!;
+    public DbSet<UserOpportunity> UserOpportunities { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Database=Antivirus;Username=postgres;Password=123987");
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseNpgsql("Name=ConnectionStrings:DefaultConnection");
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<BootcampTopics>(entity =>
+        modelBuilder.Entity<BootcampTopic>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("bootcamp_topics_pkey");
 
-            entity.HasOne(d => d.Bootcamp).WithMany(p => p.BootcampTopics).HasConstraintName("bootcamp_topics_bootcamp_id_fkey");
+            entity.HasOne(d => d.Bootcamp)
+                .WithMany(p => p.BootcampTopics)
+                .HasForeignKey(d => d.BootcampId)
+                .HasConstraintName("bootcamp_topics_bootcamp_id_fkey");
 
-            entity.HasOne(d => d.Topic).WithMany(p => p.BootcampTopics).HasConstraintName("bootcamp_topics_topic_id_fkey");
+            entity.HasOne(d => d.Topic)
+                .WithMany(p => p.BootcampTopics)
+                .HasForeignKey(d => d.TopicId)
+                .HasConstraintName("bootcamp_topics_topic_id_fkey");
         });
 
-        modelBuilder.Entity<Bootcamps>(entity =>
+        modelBuilder.Entity<Bootcamp>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("bootcamps_pkey");
 
-            entity.HasOne(d => d.Institution).WithMany(p => p.Bootcamps)
-                .OnDelete(DeleteBehavior.SetNull)
+            entity.HasOne(d => d.Institution)
+                .WithMany(p => p.Bootcamps)
+                .HasForeignKey(d => d.InstitutionId)
+                .OnDelete(DeleteBehavior.SetNull) // Evitar cascada riesgosa
                 .HasConstraintName("bootcamps_institution_id_fkey");
         });
 
-        modelBuilder.Entity<Categories>(entity =>
+        modelBuilder.Entity<Category>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("categories_pkey");
         });
 
-        modelBuilder.Entity<Institutions>(entity =>
+        modelBuilder.Entity<Institution>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("institutions_pkey");
         });
 
-        modelBuilder.Entity<Opportunities>(entity =>
+        modelBuilder.Entity<Opportunity>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("opportunities_pkey");
 
-            entity.HasOne(d => d.Category).WithMany(p => p.Opportunities)
-                .OnDelete(DeleteBehavior.SetNull)
+            entity.HasOne(d => d.Category)
+                .WithMany(p => p.Opportunities)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("opportunities_category_id_fkey");
 
-            entity.HasOne(d => d.Institution).WithMany(p => p.Opportunities)
+            entity.HasOne(d => d.Institution)
+                .WithMany(p => p.Opportunities)
+                .HasForeignKey(d => d.InstitutionId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("opportunities_institution_id_fkey");
+
+            entity.HasIndex(o => o.Name) // Mejora en búsquedas
+                .HasDatabaseName("idx_opportunity_name");
         });
 
-        modelBuilder.Entity<Topics>(entity =>
+        modelBuilder.Entity<Topic>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("topics_pkey");
         });
 
-        modelBuilder.Entity<UserOpportunities>(entity =>
+        modelBuilder.Entity<UserOpportunity>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("user_opportunities_pkey");
 
-            entity.HasOne(d => d.Opportunity).WithMany(p => p.UserOpportunities).HasConstraintName("user_opportunities_opportunity_id_fkey");
+            entity.HasOne(d => d.Opportunity)
+                .WithMany(p => p.UserOpportunities)
+                .HasForeignKey(d => d.OpportunityId)
+                .OnDelete(DeleteBehavior.Restrict) // Evitar eliminación accidental
+                .HasConstraintName("user_opportunities_opportunity_id_fkey");
 
-            entity.HasOne(d => d.User).WithMany(p => p.UserOpportunities).HasConstraintName("user_opportunities_user_id_fkey");
+            entity.HasOne(d => d.User)
+                .WithMany(p => p.UserOpportunities)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("user_opportunities_user_id_fkey");
         });
 
-        modelBuilder.Entity<Users>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("users_pkey");
         });
