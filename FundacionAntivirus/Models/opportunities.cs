@@ -45,7 +45,7 @@ public partial class opportunities
 
     [ForeignKey("institution_id")]
     [InverseProperty("opportunities")]
-    public virtual institutions? institution { get; set; }
+    public virtual Institution? institution { get; set; }
 
     [InverseProperty("opportunity")]
     public virtual ICollection<user_opportunities> user_opportunities { get; set; } = new List<user_opportunities>();

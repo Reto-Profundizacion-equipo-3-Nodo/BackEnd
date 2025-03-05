@@ -27,5 +27,5 @@ public partial class bootcamps
 
     [ForeignKey("institution_id")]
     [InverseProperty("bootcamps")]
-    public virtual institutions? institution { get; set; }
+    public virtual Institution? institution { get; set; }
 }

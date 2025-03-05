@@ -10,6 +10,8 @@ builder.Services.ConfigureSwagger();
 builder.Services.ConfigureServices(builder.Configuration);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IInstitutionService, InstitutionService>();
+
 
 var app = builder.Build();
 app.UseSwagger();

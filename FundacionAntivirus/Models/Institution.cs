@@ -3,26 +3,22 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using FundacionAntivirus.Models;
 
 namespace FundacionAntivirus.Models;
 
-public partial class institutions
+public partial class Institution
 {
     [Key]
-    public int id { get; set; }
+    public int Id { get; set; }
 
     [StringLength(255)]
-    public string name { get; set; } = null!;
-
-    public string? ubication { get; set; }
-
-    public string? url_generalidades { get; set; }
-
-    public string? url_oferta_academica { get; set; }
-
-    public string? url_bienestar { get; set; }
-
-    public string? url_admision { get; set; }
+    public string Nombre { get; set; }
+    public string Ubicacion { get; set; }
+    public string? UrlGeneralidades { get; set; }
+    public string? UrlOfertaAcademica { get; set; }
+    public string? UrlBienestar { get; set; }
+    public string? UrlAdmision { get; set; }
 
     [InverseProperty("institution")]
     public virtual ICollection<bootcamps> bootcamps { get; set; } = new List<bootcamps>();

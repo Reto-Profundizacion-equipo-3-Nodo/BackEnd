@@ -22,7 +22,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<categories> categories { get; set; }
 
-    public virtual DbSet<institutions> institutions { get; set; }
+    public DbSet<Institution> Institutions { get; set; }
 
     public virtual DbSet<opportunities> opportunities { get; set; }
 
@@ -61,9 +61,9 @@ public partial class AppDbContext : DbContext
             entity.HasKey(e => e.id).HasName("categories_pkey");
         });
 
-        modelBuilder.Entity<institutions>(entity =>
+        modelBuilder.Entity<Institution>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("institutions_pkey");
+            entity.HasKey(e => e.Id).HasName("institutions_pkey");
         });
 
         modelBuilder.Entity<opportunities>(entity =>
