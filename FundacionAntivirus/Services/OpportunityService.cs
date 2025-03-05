@@ -1,10 +1,5 @@
 using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Models;
-using FundacionAntivirus.Repositories;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FundacionAntivirus.Services
 {

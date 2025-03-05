@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using FundacionAntivirus.Dto;
+using FundacionAntivirus.Dtos;
 using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Data;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +25,7 @@ namespace FundacionAntivirus.Services
             _mapper = mapper;
         }
         // Login
-        public async Task<UsersResponseDto> LoginAsync(UsersRequestDto dto)
+        public async Task<UserResponseDto> LoginAsync(UserRequestDto dto)
         {
             //Validar si ingreso un rol permitido
             var allowedRoles = new string[] { "admin", "user" };
@@ -42,10 +42,10 @@ namespace FundacionAntivirus.Services
                 throw new UnauthorizedAccessException("Credencaiels invalidas");
             }
 
-            return _mapper.Map<UsersResponseDto>(entity);
+            return _mapper.Map<UserResponseDto>(entity);
         }
         //Register
-        public async Task<UsersResponseDto> RegisterAsync(UsersRequestDto dto)
+        public async Task<UserResponseDto> RegisterAsync(UserRequestDto dto)
         {
             //validar si el rol es vàlido
             var allowedRoles = new string[] { "admin", "user" };
@@ -61,14 +61,14 @@ namespace FundacionAntivirus.Services
             {
                 throw new UnauthorizedAccessException("El usuario ya esta registrado");
             }
-            var entity = _mapper.Map<Users>(dto);
+            var entity = _mapper.Map<User>(dto);
             entity.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
             _context.Users.Add(entity);
             await _context.SaveChangesAsync();
-            return _mapper.Map<UsersResponseDto>(entity);
+            return _mapper.Map<UserResponseDto>(entity);
         }
         //Genera El Token
-        public string GenerateJwt(UsersResponseDto dto)
+        public string GenerateJwt(UserResponseDto dto)
         {
             var claims = new[] {
                 new Claim(ClaimTypes.NameIdentifier, dto.Id.ToString()),
@@ -76,7 +76,16 @@ namespace FundacionAntivirus.Services
                 new Claim(ClaimTypes.Email, dto.Email),
                 new Claim(ClaimTypes.Role, dto.Rol.ToLower()) //Permite que token lleve la informacion del role del usuario y genere el token en minusculas
             };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                       
+            // Obtener la clave secreta desde la configuración y validar que no sea nula ni vacía
+
+            var jwtKey = _configuration["Jwt:Key"];
+            if (string.IsNullOrWhiteSpace(jwtKey))
+            {
+                throw new InvalidOperationException("La clave secreta 'Jwt:Key' no está configurada en appsettings.json.");
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],
@@ -85,8 +94,22 @@ namespace FundacionAntivirus.Services
                 expires: DateTime.UtcNow.AddHours(3),
                 signingCredentials: creds
             );
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
     }
 }
+
+
+
+// var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            // var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            // var token = new JwtSecurityToken(
+            //     _configuration["Jwt:Issuer"],
+            //     _configuration["Jwt:Audience"],
+            //     claims,
+            //     expires: DateTime.UtcNow.AddHours(3),
+            //     signingCredentials: creds
+            // );
+            // return new JwtSecurityTokenHandler().WriteToken(token);

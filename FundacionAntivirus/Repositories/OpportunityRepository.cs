@@ -2,8 +2,6 @@ using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Models;
 using FundacionAntivirus.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FundacionAntivirus.Repositories
 {

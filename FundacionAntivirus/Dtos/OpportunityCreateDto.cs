@@ -1,20 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace FundacionAntivirus.Models;
+namespace FundacionAntivirus.Dtos;
 
 /// <summary>
-/// Representa una oportunidad dentro del sistema.
+/// DTO para la creación de una oportunidad.
 /// </summary>
-[Table("opportunities")]
-public partial class Opportunity
+public class OpportunityCreateDto
 {
-    /// <summary>
-    /// Identificador único de la oportunidad.
-    /// </summary>
-    [Key]
-    public int Id { get; set; }
-
     /// <summary>
     /// Nombre de la oportunidad (obligatorio, máximo 255 caracteres).
     /// </summary>
@@ -81,24 +73,4 @@ public partial class Opportunity
     /// Identificador de la institución que ofrece la oportunidad.
     /// </summary>
     public int? InstitutionId { get; set; }
-
-    /// <summary>
-    /// Categoría a la que pertenece esta oportunidad.
-    /// </summary>
-    [ForeignKey("CategoryId")]
-    [InverseProperty("Opportunities")]
-    public virtual Category? Category { get; set; }
-
-    /// <summary>
-    /// Institución que ofrece esta oportunidad.
-    /// </summary>
-    [ForeignKey("InstitutionId")]
-    [InverseProperty("Opportunities")]
-    public virtual Institution? Institution { get; set; }
-
-    /// <summary>
-    /// Lista de usuarios que han aplicado a esta oportunidad.
-    /// </summary>
-    [InverseProperty("Opportunity")]
-    public virtual ICollection<UserOpportunity> UserOpportunities { get; set; } = new List<UserOpportunity>();
 }

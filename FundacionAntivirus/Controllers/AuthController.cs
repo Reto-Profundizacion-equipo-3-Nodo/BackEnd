@@ -1,6 +1,6 @@
 
 using FundacionAntivirus.Data;
-using FundacionAntivirus.Dto;
+using FundacionAntivirus.Dtos;
 using FundacionAntivirus.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +19,7 @@ namespace FundacionAntivirus.Controllers
             _context = context;
         }
         [HttpPost("login")]
-        public async Task<ActionResult<UsersResponseDto>> LoginAsync([FromBody] UsersRequestDto dto)
+        public async Task<ActionResult<UserResponseDto>> LoginAsync([FromBody] UserRequestDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -38,7 +38,7 @@ namespace FundacionAntivirus.Controllers
             });
         }
         [HttpPost("register")]
-        public async Task<ActionResult<UsersResponseDto>> RegisterAsync([FromBody] UsersRequestDto dto)
+        public async Task<ActionResult<UserResponseDto>> RegisterAsync([FromBody] UserRequestDto dto)
         {
             if (!ModelState.IsValid)
             {

@@ -1,5 +1,5 @@
 
-using FundacionAntivirus.Dto;
+using FundacionAntivirus.Dtos;
 using FundacionAntivirus.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,24 +9,24 @@ namespace FundacionAntivirus.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUsers _service;
+        private readonly IUser _service;
         private readonly IAuthService _authService;
 
-        public UsersController(IUsers service, IAuthService authService)
+        public UsersController(IUser service, IAuthService authService)
         {
             _service = service;
             _authService = authService;
         }
 
         [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<UsersResponseDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetAll()
         {
             var list = await _service.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UsersResponseDto>> Get(int id)
+        public async Task<ActionResult<UserResponseDto>> Get(int id)
         {
             var dto = await _service.GetByIdAsync(id);
             if (dto == null)
@@ -37,7 +37,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<UsersResponseDto>> Create([FromBody] UsersRequestDto dto)
+        public async Task<ActionResult<UserResponseDto>> Create([FromBody] UserRequestDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpPut("{Updatebyid}")]
-        public async Task<ActionResult> Update(int id, [FromBody] UsersRequestDto dto)
+        public async Task<ActionResult> Update(int id, [FromBody] UserRequestDto dto)
         {
             var entity = await _service.GetByIdAsync(id);
             if (entity == null)

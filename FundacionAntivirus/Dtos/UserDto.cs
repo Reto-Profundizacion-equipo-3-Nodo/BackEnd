@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FundacionAntivirus.Dto
+namespace FundacionAntivirus.Dtos
 {
-    public class UsersResponseDto
+    public class UserResponseDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
@@ -14,7 +14,7 @@ namespace FundacionAntivirus.Dto
 
     }
 
-    public class UsersRequestDto
+    public class UserRequestDto
     {
         public string Name { get; set; } = null!;
 

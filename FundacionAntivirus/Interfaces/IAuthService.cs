@@ -1,12 +1,12 @@
-using FundacionAntivirus.Dto;
+using FundacionAntivirus.Dtos;
 
 namespace FundacionAntivirus.Interfaces
 {
     public interface IAuthService
     {
-        string GenerateJwt(UsersResponseDto dto);
-        Task<UsersResponseDto> LoginAsync(UsersRequestDto dto);
-        Task<UsersResponseDto> RegisterAsync(UsersRequestDto dto);
+        string GenerateJwt(UserResponseDto dto);
+        Task<UserResponseDto> LoginAsync(UserRequestDto dto);
+        Task<UserResponseDto> RegisterAsync(UserRequestDto dto);
 
 
     }

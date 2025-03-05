@@ -1,7 +1,7 @@
 
 using AutoMapper;
 using FundacionAntivirus.Data;
-using FundacionAntivirus.Dto;
+using FundacionAntivirus.Dtos;
 using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Models;
 using System.Security.Cryptography;
@@ -10,21 +10,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Services
 {
-    public class UsersService : IUsers
+    public class UserService : IUser
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
 
-        public UsersService(AppDbContext context, IMapper mapper)
+        public UserService(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task CreateAsync(UsersRequestDto dto)
+        public async Task CreateAsync(UserRequestDto dto)
         {
-            var entity = _mapper.Map<Users>(dto);
+            var entity = _mapper.Map<User>(dto);
             //Hashing the password using Mapper
             entity.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
             _context.Users.Add(entity);
@@ -42,19 +42,19 @@ namespace FundacionAntivirus.Services
             }
         }
 
-        public async Task<IEnumerable<UsersResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<UserResponseDto>> GetAllAsync()
         {
             var entities = await _context.Users.ToListAsync();
-            return _mapper.Map<IEnumerable<UsersResponseDto>>(entities);
+            return _mapper.Map<IEnumerable<UserResponseDto>>(entities);
         }
 
-        public async Task<UsersResponseDto> GetByIdAsync(int id)
+        public async Task<UserResponseDto> GetByIdAsync(int id)
         {
             var entity = await _context.Users.FindAsync(id);
-            return _mapper.Map<UsersResponseDto>(entity);
+            return _mapper.Map<UserResponseDto>(entity);
         }
 
-        public async Task UpdateAsync(int id, UsersRequestDto dto)
+        public async Task UpdateAsync(int id, UserRequestDto dto)
         {
             var entity = await _context.Users.FindAsync(id);
             if (entity != null)
