@@ -6,47 +6,47 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Models;
 
-public partial class opportunities
+public partial class Opportunities
 {
     [Key]
-    public int id { get; set; }
+    public int Id { get; set; }
 
     [StringLength(255)]
-    public string name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-    public string? observation { get; set; }
+    public string? Observation { get; set; }
 
     [StringLength(50)]
-    public string? type { get; set; }
+    public string? Type { get; set; }
 
-    public string? description { get; set; }
+    public string? Description { get; set; }
 
-    public string? requires { get; set; }
+    public string? Requires { get; set; }
 
-    public string? guide { get; set; }
+    public string? Guide { get; set; }
 
-    public string? adicional_dates { get; set; }
+    public string? Adicional_dates { get; set; }
 
-    public string? service_channels { get; set; }
+    public string? ServiceChannels { get; set; }
 
     [StringLength(255)]
-    public string? manager { get; set; }
+    public string? Manager { get; set; }
 
     [StringLength(50)]
-    public string? modality { get; set; }
+    public string? Modality { get; set; }
 
-    public int? category_id { get; set; }
+    public int? CategoryId { get; set; }
 
-    public int? institution_id { get; set; }
+    public int? InstitutionId { get; set; }
 
-    [ForeignKey("category_id")]
-    [InverseProperty("opportunities")]
-    public virtual categories? category { get; set; }
+    [ForeignKey("CategoryId")]
+    [InverseProperty("Opportunities")]
+    public virtual Categories? Category { get; set; }
 
-    [ForeignKey("institution_id")]
-    [InverseProperty("opportunities")]
-    public virtual Institution? institution { get; set; }
+    [ForeignKey("InstitutionId")]
+    [InverseProperty("Opportunities")]
+    public virtual Institution? Institution { get; set; }
 
-    [InverseProperty("opportunity")]
-    public virtual ICollection<user_opportunities> user_opportunities { get; set; } = new List<user_opportunities>();
+    [InverseProperty("Opportunity")]
+    public virtual ICollection<UserOpportunities> UserOpportunities { get; set; } = new List<UserOpportunities>();
 }

@@ -6,24 +6,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Models;
 
-[Index("email", Name = "users_email_key", IsUnique = true)]
-public partial class users
+[Index("Email", Name = "users_email_key", IsUnique = true)]
+public partial class Users
 {
     [Key]
-    public int id { get; set; }
+    public int Id { get; set; }
 
     [StringLength(255)]
-    public string name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     [StringLength(255)]
-    public string email { get; set; } = null!;
+    public string Email { get; set; } = null!;
 
     [StringLength(255)]
-    public string password { get; set; } = null!;
+    public string Password { get; set; } = null!;
 
     [StringLength(50)]
-    public string rol { get; set; } = null!;
+    public string Rol { get; set; } = null!;
 
-    [InverseProperty("user")]
-    public virtual ICollection<user_opportunities> user_opportunities { get; set; } = new List<user_opportunities>();
+    [InverseProperty("User")]
+    public virtual ICollection<UserOpportunities> UserOpportunities { get; set; } = new List<UserOpportunities>();
 }

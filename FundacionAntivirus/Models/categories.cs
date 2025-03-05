@@ -6,16 +6,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Models;
 
-public partial class categories
+public partial class Categories
 {
     [Key]
-    public int id { get; set; }
+    public int Id { get; set; }
 
     [StringLength(255)]
-    public string name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-    public string? description { get; set; }
+    public string? Description { get; set; }
 
-    [InverseProperty("category")]
-    public virtual ICollection<opportunities> opportunities { get; set; } = new List<opportunities>();
+    [InverseProperty("Category")]
+    public virtual ICollection<Opportunities> Opportunities { get; set; } = new List<Opportunities>();
 }

@@ -6,26 +6,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Models;
 
-public partial class bootcamps
+public partial class Bootcamps
 {
     [Key]
-    public int id { get; set; }
+    public int Id { get; set; }
 
     [StringLength(255)]
-    public string name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-    public string? description { get; set; }
+    public string? Description { get; set; }
 
-    public string? information { get; set; }
+    public string? Information { get; set; }
 
-    public string? costs { get; set; }
+    public string? Costs { get; set; }
 
-    public int? institution_id { get; set; }
+    public int? InstitutionId { get; set; }
 
-    [InverseProperty("bootcamp")]
-    public virtual ICollection<bootcamp_topics> bootcamp_topics { get; set; } = new List<bootcamp_topics>();
+    [InverseProperty("Bootcamp")]
+    public virtual ICollection<BootcampTopics> BootcampTopics { get; set; } = new List<BootcampTopics>();
 
-    [ForeignKey("institution_id")]
-    [InverseProperty("bootcamps")]
-    public virtual Institution? institution { get; set; }
+    [ForeignKey("InstitutionId")]
+    [InverseProperty("Bootcamps")]
+    public virtual Institution? Institution { get; set; }
 }

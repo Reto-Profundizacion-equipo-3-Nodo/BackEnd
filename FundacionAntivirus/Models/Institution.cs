@@ -20,9 +20,9 @@ public partial class Institution
     public string? UrlBienestar { get; set; }
     public string? UrlAdmision { get; set; }
 
-    [InverseProperty("institution")]
-    public virtual ICollection<bootcamps> bootcamps { get; set; } = new List<bootcamps>();
+    [InverseProperty("Institution")]
+    public virtual ICollection<Bootcamps> Bootcamps { get; set; } = new List<Bootcamps>();
 
-    [InverseProperty("institution")]
-    public virtual ICollection<opportunities> opportunities { get; set; } = new List<opportunities>();
+    [InverseProperty("Institution")]
+    public virtual ICollection<Opportunities> Opportunities { get; set; } = new List<Opportunities>();
 }
