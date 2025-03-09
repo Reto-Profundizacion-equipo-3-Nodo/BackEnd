@@ -24,6 +24,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOpportunityService, OpportunityService>();
 builder.Services.AddScoped<IInstitutionService, InstitutionService>(); // Se conserva también
+builder.Services.AddScoped<IDonationRepository, DonationRepository>();
 
 // Configuración de la conexión a PostgreSQL desde appsettings.json (Buena práctica)
 builder.Services.AddDbContext<AppDbContext>(options =>
