@@ -1,9 +1,10 @@
-using Antivirus.Models.Dtos;
-using Antivirus.Services;
+using FundacionAntivirus.Models;
+using FundacionAntivirus.Services;
+using FundacionAntivirus.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Antivirus.Controllers
+namespace FundacionAntivirus.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -35,8 +36,8 @@ namespace Antivirus.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] BootcampCreateDto bootcampDto)
         {
-            await _bootcampService.CreateAsync(Dto);
-            return CreatedAtAction(nameof(GetAll), Dto);
+            await _bootcampService.CreateAsync(bootcampDto);
+            return CreatedAtAction(nameof(GetAll), bootcampDto);
         }
 
         [HttpPut("{id}")]
@@ -49,11 +50,6 @@ namespace Antivirus.Controllers
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int id)
-        {
-            var result = await _bootcampService.DeleteAsync(id);
-            if (!result) return NotFound();
-            return NoContent();
-        }
         {
             var result = await _bootcampService.DeleteAsync(id);
             if (!result) return NotFound();

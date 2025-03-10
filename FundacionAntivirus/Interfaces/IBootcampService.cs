@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FundacionAntivirus.Dtos
+using FundacionAntivirus.Dtos;
 
-namespace Antivirus.Services
+namespace FundacionAntivirus.Services
 {
     public interface IBootcampService
     {

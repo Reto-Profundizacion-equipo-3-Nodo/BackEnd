@@ -1,13 +1,10 @@
-using Antivirus.Data;
-using Antivirus.Models;
-using Antivirus.Models.DTOs;
+using FundacionAntivirus.Data;
+using FundacionAntivirus.Models;
+using FundacionAntivirus.Dtos;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace Antivirus.Services
+namespace FundacionAntivirus.Services
 {
     public class BootcampService : IBootcampService
     {
@@ -22,13 +19,13 @@ namespace Antivirus.Services
 
         public async Task<IEnumerable<BootcampDto>> GetAllAsync()
         {
-            var bootcamps = await _context.bootcamps.ToListAsync();
+            var bootcamps = await _context.Bootcamps.ToListAsync();
             return _mapper.Map<IEnumerable<BootcampDto>>(bootcamps);
         }
 
         public async Task<BootcampDto> GetByIdAsync(int Id)
         {
-            var bootcamp = await _context.bootcamps.FindAsync(Id);
+            var bootcamp = await _context.Bootcamps.FindAsync(Id);
             return _mapper.Map<BootcampDto>(bootcamp);
         }
 
@@ -37,28 +34,26 @@ namespace Antivirus.Services
             var bootcamp = new Bootcamp
             {
                 Name = Dto.Name,
-                Description = Dto.DescriptionId,
-                Information = Dto.InformationId,
-                Costs = Dto.IdCostId,
-                InstitutuinId = Dto.institutionId,
+                Description = Dto.Description,
+                Information = Dto.Information,
+                Costs = Dto.Costs,
+                InstitutionId = Dto.InstitutionId,
                 
             };
-            _context.bootcamps.Add(bootcamp);
+            _context.Bootcamps.Add(bootcamp);
             await _context.SaveChangesAsync();
         }
 
         public async Task<BootcampDto> UpdateAsync(int Id, BootcampCreateDto bootcampDto)
         {
-            var bootcamp = await _context.bootcamp.FindAsync(Id);
-            if (bootcamp == null)
+            var bootcamp = await _context.Bootcamps.FindAsync(Id);
+            if (bootcamp != null)
                 return null;
-
-            
-                Name = Dto.Name,
-                Description = Dto.DescriptionId,
-                Information = Dto.InformationId,
-                Costs = Dto.IdCostId,
-                InstitutuinId = Dto.institutionId,
+                bootcamp.Name = bootcampDto.Name;
+                bootcamp.Description = bootcampDto.Description;
+                bootcamp.Information = bootcampDto.Information;
+                bootcamp.Costs = bootcampDto.Costs;
+                bootcamp.InstitutionId = bootcampDto.InstitutionId;
 
             await _context.SaveChangesAsync();
             return _mapper.Map<BootcampDto>(bootcamp);
@@ -66,10 +61,10 @@ namespace Antivirus.Services
 
         public async Task<bool> DeleteAsync(int Id)
         {
-            var bootcamp = await _context.bootcamps.FindAsync(Id);
+            var bootcamp = await _context.Bootcamps.FindAsync(Id);
             if (bootcamp == null) return false;
 
-            _context.bootcamps.Remove(bootcamp);
+            _context.Bootcamps.Remove(bootcamp);
             await _context.SaveChangesAsync();
             return true;
         }
