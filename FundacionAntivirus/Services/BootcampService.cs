@@ -34,31 +34,31 @@ namespace Antivirus.Services
 
         public async Task CreateAsync(BootcampCreateDto Dto)
         {
-            var bootcamp = new Bootcamps
+            var bootcamp = new Bootcamp
             {
-                name = Dto.Name,
-                id_cost_id = Dto.IdCostId,
-                id_description_id = Dto.DescriptionId,
-                id_general_id = Dto.IdGeneralId,
-                id_institutionId_id = Dto.institutionId,
+                Name = Dto.Name,
+                Description = Dto.DescriptionId,
+                Information = Dto.InformationId,
+                Costs = Dto.IdCostId,
+                InstitutuinId = Dto.institutionId,
                 
             };
-            _context.bootcamps.Add(bootcampVar);
+            _context.bootcamps.Add(bootcamp);
             await _context.SaveChangesAsync();
         }
 
         public async Task<BootcampDto> UpdateAsync(int Id, BootcampCreateDto bootcampDto)
         {
-            var bootcamp = await _context.bootcamps.FindAsync(Id);
+            var bootcamp = await _context.bootcamp.FindAsync(Id);
             if (bootcamp == null)
                 return null;
 
             
-                name = Dto.Name,
-                id_cost_id = Dto.IdCostId,
-                id_description_id = Dto.DescriptionId,
-                id_general_id = Dto.IdGeneralId,
-                id_institutionId_id = Dto.institutionId,
+                Name = Dto.Name,
+                Description = Dto.DescriptionId,
+                Information = Dto.InformationId,
+                Costs = Dto.IdCostId,
+                InstitutuinId = Dto.institutionId,
 
             await _context.SaveChangesAsync();
             return _mapper.Map<BootcampDto>(bootcamp);
