@@ -16,6 +16,7 @@ public partial class AppDbContext : DbContext
     public DbSet<Category> Categories { get; set; } = null!;
     public DbSet<Institution> Institutions { get; set; } = null!;
     public DbSet<Opportunity> Opportunities { get; set; } = null!;
+    public DbSet<OpportunityInstitution> OpportunityInstitutions { get; set; } = null!;
     public DbSet<Topic> Topics { get; set; } = null!;
     public DbSet<UserOpportunity> UserOpportunities { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
