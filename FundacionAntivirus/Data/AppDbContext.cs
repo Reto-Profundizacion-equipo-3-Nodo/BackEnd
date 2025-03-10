@@ -20,6 +20,7 @@ public partial class AppDbContext : DbContext
     public DbSet<Topic> Topics { get; set; } = null!;
     public DbSet<UserOpportunity> UserOpportunities { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
+     public DbSet<Donation> Donations { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
