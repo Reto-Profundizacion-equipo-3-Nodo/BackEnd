@@ -1,6 +1,7 @@
 
 using FundacionAntivirus.Dtos;
 using FundacionAntivirus.Interfaces;
+using FundacionAntivirus.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FundacionAntivirus.Controllers
@@ -21,54 +22,150 @@ namespace FundacionAntivirus.Controllers
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetAll()
         {
-            var list = await _service.GetAllAsync();
-            return Ok(list);
+            try
+            {
+                var list = await _service.GetAllAsync();
+                return Ok(list);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, new ErrorViewModel
+                {
+                    StatusCode = 500,
+                    Message = "Error interno del servidor al obtener la lista de usuarios",
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserResponseDto>> Get(int id)
         {
-            var dto = await _service.GetByIdAsync(id);
-            if (dto == null)
+            try
             {
-                return NotFound();
+                var dto = await _service.GetByIdAsync(id);
+                if (dto == null)
+                {
+                    return StatusCode(404, new ErrorViewModel
+                    {
+                        StatusCode = 404,
+                        Message = "Usuario no encontrado",
+                        RequestId = HttpContext.TraceIdentifier
+                    });
+
+                }
+                return Ok(dto);
+
             }
-            return Ok(dto);
+            catch (Exception)
+            {
+                return StatusCode(500, new ErrorViewModel
+                {
+                    StatusCode = 500,
+                    Message = "Error interno del servidor al obtener el usuario",
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
+
         }
 
         [HttpPost("create")]
         public async Task<ActionResult<UserResponseDto>> Create([FromBody] UserRequestDto dto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                await _service.CreateUserAsync(dto);
+                return Ok(new { message = "User registered successfully" });
+
             }
-            await _service.CreateAsync(dto);
-            return Ok(new { message = "User registered successfully" });
-            // return CreatedAtAction(nameof(Get), dto);
+            catch (Exception)
+            {
+                return StatusCode(500,new ErrorViewModel
+                {
+                    StatusCode = 500,
+                    Message = "Error interno del servidor al crear el usuario",
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
         }
 
-        [HttpPut("{Updatebyid}")]
+        [HttpPut("Updatebyid/{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] UserRequestDto dto)
         {
-            var entity = await _service.GetByIdAsync(id);
-            if (entity == null)
+            try
             {
-                return NotFound();
+                var entity = await _service.GetByIdAsync(id);
+                if (entity == null)
+                {
+                    return StatusCode(404, new ErrorViewModel
+                    {
+                        StatusCode = 404,
+                        Message = "Usuario no encontrado",
+                        RequestId = HttpContext.TraceIdentifier
+                    });
+                }
+                if (string.IsNullOrEmpty(dto.Name) || dto.Name == "string")
+                {
+                    return BadRequest(new { message = "Name is required" });
+                }
+                if (string.IsNullOrEmpty(dto.Email) || dto.Email == "user@example.com" || !dto.Email.Contains("@"))
+                {
+                    return BadRequest(new { message = "Email is required or email is not valid" });
+                }
+                var allowedRoles = new List<string> { "admin", "user" };
+                if (!allowedRoles.Contains(dto.Rol))
+                {
+                    return BadRequest(new { message = "Role is not valid" });
+                }
+                await _service.UpdateUserAsync(id, dto);
+                return NoContent();
+
             }
-            return NoContent();
+            catch (Exception)
+            {
+                return StatusCode(500, new ErrorViewModel
+                {
+                    StatusCode = 500,
+                    Message = "Error interno del servidor al actualizar el usuario",
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
+
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = await _service.GetByIdAsync(id);
+                if (result == null)
+                {
+                    return StatusCode(404,new ErrorViewModel
+                    {
+                        StatusCode = 404,
+                        Message = "Usuario no encontrado",
+                        RequestId = HttpContext.TraceIdentifier
+                    });
+                }
+                await _service.DeleteUserAsync(id);
+                return NoContent();
+
             }
-            await _service.DeleteAsync(id);
-            return NoContent();
+            catch (Exception)
+            {
+                return StatusCode(500, new ErrorViewModel
+                {
+                    StatusCode = 500,
+                    Message = "Error interno del servidor al eliminar el usuario",
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
         }
     }
 }

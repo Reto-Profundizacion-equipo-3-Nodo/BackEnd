@@ -4,8 +4,7 @@ using FundacionAntivirus.Data;
 using FundacionAntivirus.Dtos;
 using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Models;
-using System.Security.Cryptography;
-using System.Text;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Services
@@ -22,17 +21,16 @@ namespace FundacionAntivirus.Services
             _mapper = mapper;
         }
 
-        public async Task CreateAsync(UserRequestDto dto)
+        public async Task CreateUserAsync(UserRequestDto dto)
         {
             var entity = _mapper.Map<User>(dto);
             //Hashing the password using Mapper
             entity.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
             _context.Users.Add(entity);
             await _context.SaveChangesAsync();
-            // _mapper.Map<UsersRequestDto>(entity);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteUserAsync(int id)
         {
             var entity = await _context.Users.FindAsync(id);
             if (entity != null)
@@ -54,7 +52,7 @@ namespace FundacionAntivirus.Services
             return _mapper.Map<UserResponseDto>(entity);
         }
 
-        public async Task UpdateAsync(int id, UserRequestDto dto)
+        public async Task UpdateUserAsync(int id, UserRequestDto dto)
         {
             var entity = await _context.Users.FindAsync(id);
             if (entity != null)
