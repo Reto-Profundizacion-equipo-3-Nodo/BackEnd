@@ -59,7 +59,7 @@ namespace FundacionAntivirus.Services
             {
                 entity.Name = dto.Name;
                 entity.Email = dto.Email;
-                entity.Password = dto.Password;
+                entity.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);;
                 entity.Rol = dto.Rol;
                 await _context.SaveChangesAsync();
             }
