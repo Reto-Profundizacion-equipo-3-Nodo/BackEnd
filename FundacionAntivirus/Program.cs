@@ -7,6 +7,18 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Habilitar los CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()//Permitir cualquier header
+                .AllowAnyMethod();//Permitir cualquier metodo
+        });
+});
+
 // Agregar controladores y vistas
 builder.Services.AddControllersWithViews();
 
@@ -41,6 +53,17 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Antivirus V1");
+});
+
+//Pagina de inicio con swagger
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.Value == "/")
+    {
+        context.Response.Redirect("/swagger");
+    }
+    await next();
+
 });
 
 // Configuración del pipeline HTTP
