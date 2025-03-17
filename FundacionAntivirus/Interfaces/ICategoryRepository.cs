@@ -1,4 +1,5 @@
 using FundacionAntivirus.Models;
+using FundacionAntivirus.Dtos;
 
 namespace FundacionAntivirus.Interfaces;
 
@@ -32,7 +33,7 @@ public interface ICategoryRepository
     /// </summary>
     /// <param name="category">La categoría con los datos actualizados.</param>
     /// <returns>La categoría actualizada o null si no se encontró.</returns>
-    Task<Category?> UpdateAsync(Category category);
+    Task<Category?> UpdateAsync(CategoryUpdateDto categoryUpdateDto);
 
     /// <summary>
     /// Elimina una categoría del sistema según su identificador.

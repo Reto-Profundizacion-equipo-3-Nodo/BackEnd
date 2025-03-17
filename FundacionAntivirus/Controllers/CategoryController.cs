@@ -1,6 +1,8 @@
 using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Models;
+using FundacionAntivirus.Dtos;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace FundacionAntivirus.Controllers
 {
@@ -69,14 +71,14 @@ namespace FundacionAntivirus.Controllers
         /// <param name="category">Objeto con los datos de la categoría a crear.</param>
         /// <returns>La categoría creada.</returns>
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] Category category)
+        public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateDto categoryCreateDto)
         {
             try
             {
-                if (category == null)
+                if (categoryCreateDto == null)
                     return BadRequest("Los datos de la categoría no pueden ser nulos.");
 
-                var createdCategory = await _categoryService.AddAsync(category);
+                var createdCategory = await _categoryService.AddAsync(categoryCreateDto);
                 return CreatedAtAction(nameof(GetCategoryById), new { id = createdCategory.Id }, createdCategory);
             }
             catch (Exception ex)
@@ -92,14 +94,14 @@ namespace FundacionAntivirus.Controllers
         /// <param name="category">Objeto con los nuevos datos de la categoría.</param>
         /// <returns>La categoría actualizada o un mensaje de error si no se encuentra.</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] Category category)
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryUpdateDto categoryUpdateDto)
         {
             try
             {
-                if (category == null || id != category.Id)
+                if (categoryUpdateDto == null || id != categoryUpdateDto.Id)
                     return BadRequest("Los datos de la categoría son inválidos.");
 
-                var updatedCategory = await _categoryService.UpdateAsync(category);
+                var updatedCategory = await _categoryService.UpdateAsync(categoryUpdateDto);
                 if (updatedCategory == null)
                     return NotFound($"Categoría con ID {id} no encontrada.");
 

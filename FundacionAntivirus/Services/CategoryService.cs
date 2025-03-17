@@ -1,5 +1,6 @@
 using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Models;
+using FundacionAntivirus.Dtos;
 
 namespace FundacionAntivirus.Services
 {
@@ -27,14 +28,24 @@ namespace FundacionAntivirus.Services
             return await _categoryRepository.GetByIdAsync(id);
         }
 
-        public async Task<Category> AddAsync(Category category)
+        public async Task<Category> AddAsync(CategoryCreateDto categoryCreateDto)
         {
+            var category = new Category
+            {
+                Name = categoryCreateDto.Name,
+                Description = categoryCreateDto.Description
+            };
             return await _categoryRepository.AddAsync(category);
         }
 
-        public async Task<Category?> UpdateAsync(Category category)
+        public async Task<Category?> UpdateAsync(CategoryUpdateDto categoryUpdateDto)
         {
-            return await _categoryRepository.UpdateAsync(category);
+             var existingCategory = await _categoryRepository.GetByIdAsync(categoryUpdateDto.Id);
+            if (existingCategory == null) return null;
+
+            existingCategory.Name = categoryUpdateDto.Name;
+            existingCategory.Description = categoryUpdateDto.Description;
+            return await _categoryRepository.UpdateAsync(categoryUpdateDto);
         }
 
         public async Task<bool> DeleteAsync(int id)

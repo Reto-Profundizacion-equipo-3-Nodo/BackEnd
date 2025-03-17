@@ -1,6 +1,7 @@
 using FundacionAntivirus.Data;
 using FundacionAntivirus.Models;
 using FundacionAntivirus.Interfaces;
+using FundacionAntivirus.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace FundacionAntivirus.Repositories;
@@ -61,18 +62,21 @@ public class CategoryRepository : ICategoryRepository
     /// </summary>
     /// <param name="category">La categoría con los datos actualizados.</param>
     /// <returns>La categoría actualizada o null si no se encontró.</returns>
-    public async Task<Category?> UpdateAsync(Category category)
+    public async Task<Category?> UpdateAsync(CategoryUpdateDto categoryUpdateDto)
     {
-        if (category == null)
-            throw new ArgumentNullException(nameof(category));
+        if (categoryUpdateDto == null)
+            throw new ArgumentNullException(nameof(categoryUpdateDto));
 
-        var existingCategory = await _context.Categories.FindAsync(category.Id);
+        var existingCategory = await _context.Categories.FindAsync(categoryUpdateDto.Id);
         if (existingCategory == null)
         {
             return null; // No se encontró la categoría.
         }
+        // Actualiza los valores de la categoría existente con los nuevos valores.
+        existingCategory.Name = categoryUpdateDto.Name;
+        existingCategory.Description = categoryUpdateDto.Description;
 
-        _context.Entry(existingCategory).CurrentValues.SetValues(category);
+        _context.Categories.Update(existingCategory);
         await _context.SaveChangesAsync();
         return existingCategory;
     }

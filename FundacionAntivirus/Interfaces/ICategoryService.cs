@@ -1,4 +1,5 @@
 using FundacionAntivirus.Models;
+using FundacionAntivirus.Dtos;
 
 namespace FundacionAntivirus.Interfaces
 {
@@ -14,10 +15,10 @@ namespace FundacionAntivirus.Interfaces
         Task<Category?> GetByIdAsync(int id);
 
         /// <summary>Crea una nueva categoría en el sistema.</summary>
-        Task<Category> AddAsync(Category category);
+        Task<Category> AddAsync(CategoryCreateDto categoryCreateDto);
 
         /// <summary>Actualiza una categoría existente.</summary>
-        Task<Category?> UpdateAsync(Category category);
+        Task<Category?> UpdateAsync(CategoryUpdateDto categoryUpdateDto);
 
         /// <summary>Elimina una categoría por su identificador.</summary>
         Task<bool> DeleteAsync(int id);
