@@ -1,5 +1,6 @@
 using FundacionAntivirus.Models;
 using FundacionAntivirus.Interfaces;
+using FundacionAntivirus.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FundacionAntivirus.Controllers;
@@ -88,9 +89,25 @@ public class DonationsController : ControllerBase
     /// </remarks>
     /// <response code="200">Devuelve la donación creada</response>
     /// <response code="400">Si la donación no es válida</response>
-    [HttpPost]
-    public async Task<IActionResult> CreateDonation([FromBody] Donation donation)
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateDonation([FromBody] DonationDto donationDto)
     {
+        if (donationDto.UserId <= 0)
+        {
+            return StatusCode(400, new ErrorViewModel
+            {
+                StatusCode = 400,
+                Message = "Error la donación no puede ser nula.",
+                RequestId = HttpContext.TraceIdentifier
+            });
+        }
+        var donation = new Donation
+        {
+            UserId = donationDto.UserId,
+            DonorName = donationDto.DonorName,
+            Amount = donationDto.Amount,
+            PaymentMethod = donationDto.PaymentMethod
+        };
         var response = await _donationRepository.CreateDonation(donation);
 
         return Ok(response);
@@ -104,14 +121,36 @@ public class DonationsController : ControllerBase
     /// </remarks>
     /// <response code="200">Devuelve la donación actualizada</response>
     /// <response code="404">Si no se encuentra la donación a actualizar</response>
-    [HttpPut]
-    public async Task<IActionResult> UpdateDonation([FromBody] Donation donation)
+    [HttpPut("actualizar/{id}")]
+    public async Task<IActionResult> UpdateDonation(int id, [FromBody] DonationDto donationDto)
     {
+        if (donationDto.UserId <= 0)
+        {
+            return StatusCode(400, new ErrorViewModel
+            {
+                StatusCode = 400,
+                Message = "Error la donación el user no puede ser nulo.",
+                RequestId = HttpContext.TraceIdentifier
+            });
+        }
+        var donation = new Donation
+        {
+            Id = donationDto.Id,
+            UserId = donationDto.UserId,
+            DonorName = donationDto.DonorName,
+            Amount = donationDto.Amount,
+            PaymentMethod = donationDto.PaymentMethod
+        };
+        
         var response = await _donationRepository.UpdateDonation(donation);
-
         if (response is null)
         {
-            return NotFound("No se encontró la donación a actualizar.");
+            return StatusCode(400, new ErrorViewModel
+            {
+                StatusCode = 400,
+                Message = "No se encontró la donación a actualizar.",
+                RequestId = HttpContext.TraceIdentifier
+            });
         }
 
         return Ok(response);

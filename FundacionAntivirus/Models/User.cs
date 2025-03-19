@@ -26,4 +26,7 @@ public partial class User
 
     [InverseProperty("User")]
     public virtual ICollection<UserOpportunity> UserOpportunities { get; set; } = new List<UserOpportunity>();
+    //Relacion con donaciones
+    public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
+
 }
