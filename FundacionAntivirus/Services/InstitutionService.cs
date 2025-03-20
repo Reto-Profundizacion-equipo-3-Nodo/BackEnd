@@ -1,6 +1,7 @@
 using FundacionAntivirus.Data;
 using FundacionAntivirus.Models;
 using FundacionAntivirus.Dto;
+using FundacionAntivirus.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 

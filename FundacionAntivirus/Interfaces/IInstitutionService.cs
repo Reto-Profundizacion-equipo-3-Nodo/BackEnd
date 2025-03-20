@@ -1,7 +1,7 @@
 using FundacionAntivirus.Models;
 using FundacionAntivirus.Dto;
 
-namespace FundacionAntivirus.Services
+namespace FundacionAntivirus.Interfaces
 {
     public interface IInstitutionService
     {

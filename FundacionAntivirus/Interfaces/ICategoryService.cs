@@ -22,5 +22,9 @@ namespace FundacionAntivirus.Interfaces
 
         /// <summary>Elimina una categoría por su identificador.</summary>
         Task<bool> DeleteAsync(int id);
+        /// <summary>
+        /// Obtiene una categoría por su identificador único.
+        /// </summary>
+        Task<Category?> GetCategoryByIdAsync(int id);
     }
 }

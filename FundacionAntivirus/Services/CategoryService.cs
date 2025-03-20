@@ -27,6 +27,10 @@ namespace FundacionAntivirus.Services
         {
             return await _categoryRepository.GetByIdAsync(id);
         }
+        public async Task<Category?> GetCategoryByIdAsync(int id)
+        {
+            return await _categoryRepository.GetByIdAsync(id);
+        }
 
         public async Task<Category> AddAsync(CategoryCreateDto categoryCreateDto)
         {
@@ -40,7 +44,7 @@ namespace FundacionAntivirus.Services
 
         public async Task<Category?> UpdateAsync(CategoryUpdateDto categoryUpdateDto)
         {
-             var existingCategory = await _categoryRepository.GetByIdAsync(categoryUpdateDto.Id);
+            var existingCategory = await _categoryRepository.GetByIdAsync(categoryUpdateDto.Id);
             if (existingCategory == null) return null;
 
             existingCategory.Name = categoryUpdateDto.Name;
