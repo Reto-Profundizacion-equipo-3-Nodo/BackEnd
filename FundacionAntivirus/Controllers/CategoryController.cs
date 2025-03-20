@@ -1,8 +1,9 @@
 using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Models;
 using FundacionAntivirus.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Threading.Tasks;
 
 namespace FundacionAntivirus.Controllers
 {
@@ -30,6 +31,7 @@ namespace FundacionAntivirus.Controllers
         /// </summary>
         /// <returns>Una lista de categorías.</returns>
         [HttpGet]
+        [Authorize(Roles = "Admin,User")] // Tanto Admin como User pueden ver todas las categorías
         public async Task<IActionResult> GetAllCategories()
         {
             try
@@ -49,6 +51,7 @@ namespace FundacionAntivirus.Controllers
         /// <param name="id">ID de la categoría.</param>
         /// <returns>La categoría encontrada o un mensaje de error si no existe.</returns>
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,User")] // Tanto Admin como User pueden ver una categoría específica
         public async Task<IActionResult> GetCategoryById(int id)
         {
             try
@@ -68,9 +71,10 @@ namespace FundacionAntivirus.Controllers
         /// <summary>
         /// Crea una nueva categoría.
         /// </summary>
-        /// <param name="category">Objeto con los datos de la categoría a crear.</param>
+        /// <param name="categoryCreateDto">Objeto con los datos de la categoría a crear.</param>
         /// <returns>La categoría creada.</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")] // Solo los administradores pueden crear categorías
         public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateDto categoryCreateDto)
         {
             try
@@ -91,9 +95,10 @@ namespace FundacionAntivirus.Controllers
         /// Actualiza una categoría existente.
         /// </summary>
         /// <param name="id">ID de la categoría a actualizar.</param>
-        /// <param name="category">Objeto con los nuevos datos de la categoría.</param>
+        /// <param name="categoryUpdateDto">Objeto con los nuevos datos de la categoría.</param>
         /// <returns>La categoría actualizada o un mensaje de error si no se encuentra.</returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")] // Solo los administradores pueden actualizar categorías
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryUpdateDto categoryUpdateDto)
         {
             try
@@ -119,6 +124,7 @@ namespace FundacionAntivirus.Controllers
         /// <param name="id">ID de la categoría a eliminar.</param>
         /// <returns>Respuesta vacía si se elimina con éxito o un mensaje de error si no existe.</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")] // Solo los administradores pueden eliminar categorías
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try

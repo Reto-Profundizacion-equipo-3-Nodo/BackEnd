@@ -1,7 +1,7 @@
-
 using FundacionAntivirus.Dtos;
 using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FundacionAntivirus.Controllers
@@ -20,6 +20,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpGet("all")]
+        [Authorize(Roles = "Admin")] // Solo los administradores pueden ver todos los usuarios
         public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetAll()
         {
             try
@@ -29,7 +30,6 @@ namespace FundacionAntivirus.Controllers
             }
             catch (Exception)
             {
-
                 return StatusCode(500, new ErrorViewModel
                 {
                     StatusCode = 500,
@@ -40,6 +40,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,User")] // Tanto Admin como User pueden ver un usuario por ID
         public async Task<ActionResult<UserResponseDto>> Get(int id)
         {
             try
@@ -53,10 +54,8 @@ namespace FundacionAntivirus.Controllers
                         Message = "Usuario no encontrado",
                         RequestId = HttpContext.TraceIdentifier
                     });
-
                 }
                 return Ok(dto);
-
             }
             catch (Exception)
             {
@@ -67,10 +66,10 @@ namespace FundacionAntivirus.Controllers
                     RequestId = HttpContext.TraceIdentifier
                 });
             }
-
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")] // Solo los administradores pueden crear usuarios
         public async Task<ActionResult<UserResponseDto>> Create([FromBody] UserRequestDto dto)
         {
             try
@@ -81,11 +80,10 @@ namespace FundacionAntivirus.Controllers
                 }
                 await _service.CreateUserAsync(dto);
                 return Ok(new { message = "User registered successfully" });
-
             }
             catch (Exception)
             {
-                return StatusCode(500,new ErrorViewModel
+                return StatusCode(500, new ErrorViewModel
                 {
                     StatusCode = 500,
                     Message = "Error interno del servidor al crear el usuario",
@@ -95,6 +93,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpPut("Updatebyid/{id}")]
+        [Authorize(Roles = "Admin,User")] // Admin puede actualizar cualquier usuario, User solo su propio perfil
         public async Task<ActionResult> Update(int id, [FromBody] UserRequestDto dto)
         {
             try
@@ -109,6 +108,12 @@ namespace FundacionAntivirus.Controllers
                         RequestId = HttpContext.TraceIdentifier
                     });
                 }
+
+                if (User.IsInRole("User") && User.Identity.Name != entity.Email)
+                {
+                    return Forbid(); // Un usuario no puede modificar a otro usuario
+                }
+
                 if (string.IsNullOrEmpty(dto.Name) || dto.Name == "string")
                 {
                     return BadRequest(new { message = "Name is required" });
@@ -124,7 +129,6 @@ namespace FundacionAntivirus.Controllers
                 }
                 await _service.UpdateUserAsync(id, dto);
                 return NoContent();
-
             }
             catch (Exception)
             {
@@ -135,10 +139,10 @@ namespace FundacionAntivirus.Controllers
                     RequestId = HttpContext.TraceIdentifier
                 });
             }
-
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "Admin")] // Solo los administradores pueden eliminar usuarios
         public async Task<ActionResult> Delete(int id)
         {
             try
@@ -146,7 +150,7 @@ namespace FundacionAntivirus.Controllers
                 var result = await _service.GetByIdAsync(id);
                 if (result == null)
                 {
-                    return StatusCode(404,new ErrorViewModel
+                    return StatusCode(404, new ErrorViewModel
                     {
                         StatusCode = 404,
                         Message = "Usuario no encontrado",
@@ -155,7 +159,6 @@ namespace FundacionAntivirus.Controllers
                 }
                 await _service.DeleteUserAsync(id);
                 return NoContent();
-
             }
             catch (Exception)
             {

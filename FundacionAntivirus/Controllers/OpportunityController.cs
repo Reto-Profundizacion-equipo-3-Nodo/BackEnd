@@ -1,8 +1,10 @@
 using FundacionAntivirus.Dtos;
 using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FundacionAntivirus.Controllers
@@ -32,6 +34,7 @@ namespace FundacionAntivirus.Controllers
         /// Obtiene todas las oportunidades.
         /// </summary>
         [HttpGet]
+        [Authorize(Roles = "Admin,User")] // Admin y User pueden ver todas las oportunidades
         public async Task<ActionResult<IEnumerable<OpportunityResponseDto>>> GetAll()
         {
             var opportunities = await _opportunityService.GetAllOpportunitiesAsync();
@@ -60,6 +63,7 @@ namespace FundacionAntivirus.Controllers
         /// Obtiene una oportunidad por ID.
         /// </summary>
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,User")] // Admin y User pueden ver una oportunidad específica
         public async Task<ActionResult<OpportunityResponseDto>> GetById(int id)
         {
             var opportunity = await _opportunityService.GetOpportunityByIdAsync(id);
@@ -90,9 +94,10 @@ namespace FundacionAntivirus.Controllers
         /// Crea una nueva oportunidad.
         /// </summary>
         [HttpPost]
+        [Authorize(Roles = "Admin")] // Solo los administradores pueden crear oportunidades
         public async Task<ActionResult<OpportunityResponseDto>> Create([FromBody] OpportunityCreateDto opportunityCreateDto)
         {
-            // Validar que la categoría
+            // Validar que la categoría exista
             if (opportunityCreateDto.CategoryId.HasValue)
             {
                 var category = await _categoryService.GetCategoryByIdAsync(opportunityCreateDto.CategoryId.Value);
@@ -106,7 +111,7 @@ namespace FundacionAntivirus.Controllers
                     });
                 }
             }
-            // validar que la institución existan
+            // Validar que la institución exista
             if (opportunityCreateDto.InstitutionId.HasValue)
             {
                 var institution = await _institutionService.GetInstitutionById(opportunityCreateDto.InstitutionId.Value);
@@ -164,6 +169,7 @@ namespace FundacionAntivirus.Controllers
         /// Actualiza una oportunidad existente.
         /// </summary>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")] // Solo los administradores pueden actualizar oportunidades
         public async Task<IActionResult> Update(int id, [FromBody] OpportunityCreateDto opportunityCreateDto)
         {
             var opportunity = new Opportunity
@@ -192,6 +198,7 @@ namespace FundacionAntivirus.Controllers
         /// Elimina una oportunidad por ID.
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")] // Solo los administradores pueden eliminar oportunidades
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _opportunityService.DeleteOpportunityAsync(id);
