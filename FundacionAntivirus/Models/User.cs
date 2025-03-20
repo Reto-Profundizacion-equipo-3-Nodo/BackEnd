@@ -23,6 +23,12 @@ public partial class User
 
     [StringLength(50)]
     public string Rol { get; set; } = null!;
+    [Required]
+    [Phone]
+    public string Celular { get; set; } = null!;
+
+    [Required]
+    public DateTime FechaNacimiento { get; set; }
 
     [InverseProperty("User")]
     public virtual ICollection<UserOpportunity> UserOpportunities { get; set; } = new List<UserOpportunity>();

@@ -8,7 +8,8 @@ namespace FundacionAntivirus.Dtos
         public string Name { get; set; } = null!;
 
         public string Email { get; set; } = null!;
-
+        public string Celular { get; set; } = null!;
+        public DateTime FechaNacimiento { get; set; }
         public string Rol { get; set; } = null!;
 
     }
@@ -26,5 +27,17 @@ namespace FundacionAntivirus.Dtos
         [Required(ErrorMessage = "El rol es obligatorio")]
         [RegularExpression("^(admin|user)$", ErrorMessage = "El rol no es válido")]
         public string Rol { get; set; } = null!;
+        [Required(ErrorMessage = "El número de celular es obligatorio")]
+        [Phone(ErrorMessage = "El número de celular no es válido")]
+        public string Celular { get; set; } = null!;
+
+        [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
+        [DataType(DataType.Date)]
+        private DateTime _fechaNacimiento;
+        public DateTime FechaNacimiento
+        {
+            get => _fechaNacimiento;
+            set => _fechaNacimiento = DateTime.SpecifyKind(value, DateTimeKind.Utc);
+        }
     }
 }
