@@ -20,7 +20,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,User")] // Tanto Admin como User pueden consultar las instituciones
+        [Authorize(Roles = "admin,user")] // Tanto Admin como User pueden consultar las instituciones
         public async Task<ActionResult<IEnumerable<InstitutionDto>>> GetAllInstitutions()
         {
             var institutions = await _institutionService.GetAllInstitutions();
@@ -28,7 +28,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,User")] // Tanto Admin como User pueden consultar una institución específica
+        [Authorize(Roles = "admin,user")] // Tanto Admin como User pueden consultar una institución específica
         public async Task<ActionResult<InstitutionDto>> GetInstitutionById(int id)
         {
             var institutionDto = await _institutionService.GetInstitutionById(id);
@@ -39,7 +39,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden crear instituciones
+        [Authorize(Roles = "admin")] // Solo los administradores pueden crear instituciones
         public async Task<ActionResult<InstitutionDto>> CreateInstitution([FromBody] InstitutionDto institutionDto)
         {
             var createdInstitution = await _institutionService.CreateInstitution(institutionDto);
@@ -47,7 +47,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden actualizar instituciones
+        [Authorize(Roles = "admin")] // Solo los administradores pueden actualizar instituciones
         public async Task<ActionResult<InstitutionDto>> UpdateInstitution(int id, [FromBody] InstitutionDto institutionDto)
         {
             var updatedInstitution = await _institutionService.UpdateInstitution(id, institutionDto);
@@ -58,7 +58,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden eliminar instituciones
+        [Authorize(Roles = "admin")] // Solo los administradores pueden eliminar instituciones
         public async Task<ActionResult> DeleteInstitution(int id)
         {
             bool deleted = await _institutionService.DeleteInstitution(id);

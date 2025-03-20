@@ -20,7 +20,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpGet("all")]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden ver todos los usuarios
+        [Authorize(Roles = "admin")] // Solo los administradores pueden ver todos los usuarios
         public async Task<ActionResult<IEnumerable<UserResponseDto>>> GetAll()
         {
             try
@@ -40,7 +40,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,User")] // Tanto Admin como User pueden ver un usuario por ID
+        [Authorize(Roles = "admin,user")] // Tanto Admin como User pueden ver un usuario por ID
         public async Task<ActionResult<UserResponseDto>> Get(int id)
         {
             try
@@ -69,7 +69,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden crear usuarios
+        [Authorize(Roles = "admin")] // Solo los administradores pueden crear usuarios
         public async Task<ActionResult<UserResponseDto>> Create([FromBody] UserRequestDto dto)
         {
             try
@@ -93,7 +93,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpPut("Updatebyid/{id}")]
-        [Authorize(Roles = "Admin,User")] // Admin puede actualizar cualquier usuario, User solo su propio perfil
+        [Authorize(Roles = "admin,user")] // Admin puede actualizar cualquier usuario, User solo su propio perfil
         public async Task<ActionResult> Update(int id, [FromBody] UserRequestDto dto)
         {
             try
@@ -142,7 +142,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden eliminar usuarios
+        [Authorize(Roles = "admin")] // Solo los administradores pueden eliminar usuarios
         public async Task<ActionResult> Delete(int id)
         {
             try

@@ -4,6 +4,9 @@ using FundacionAntivirus.Services;
 using FundacionAntivirus.Interfaces;
 using FundacionAntivirus.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,24 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod();//Permitir cualquier metodo
         });
 });
+
+// Configurar Autenticación con JWT
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])), // Usa una clave segura desde appsettings.json
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+// Agregar autorización
+builder.Services.AddAuthorization();
 
 // Agregar controladores y vistas
 builder.Services.AddControllersWithViews();

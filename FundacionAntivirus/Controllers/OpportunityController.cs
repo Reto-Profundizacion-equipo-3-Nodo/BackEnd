@@ -34,7 +34,7 @@ namespace FundacionAntivirus.Controllers
         /// Obtiene todas las oportunidades.
         /// </summary>
         [HttpGet]
-        [Authorize(Roles = "Admin,User")] // Admin y User pueden ver todas las oportunidades
+        [Authorize(Roles = "admin,user")] // Admin y User pueden ver todas las oportunidades
         public async Task<ActionResult<IEnumerable<OpportunityResponseDto>>> GetAll()
         {
             var opportunities = await _opportunityService.GetAllOpportunitiesAsync();
@@ -63,7 +63,7 @@ namespace FundacionAntivirus.Controllers
         /// Obtiene una oportunidad por ID.
         /// </summary>
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,User")] // Admin y User pueden ver una oportunidad específica
+        [Authorize(Roles = "admin,user")] // Admin y User pueden ver una oportunidad específica
         public async Task<ActionResult<OpportunityResponseDto>> GetById(int id)
         {
             var opportunity = await _opportunityService.GetOpportunityByIdAsync(id);
@@ -94,7 +94,7 @@ namespace FundacionAntivirus.Controllers
         /// Crea una nueva oportunidad.
         /// </summary>
         [HttpPost]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden crear oportunidades
+        [Authorize(Roles = "admin")] // Solo los administradores pueden crear oportunidades
         public async Task<ActionResult<OpportunityResponseDto>> Create([FromBody] OpportunityCreateDto opportunityCreateDto)
         {
             // Validar que la categoría exista
@@ -169,7 +169,7 @@ namespace FundacionAntivirus.Controllers
         /// Actualiza una oportunidad existente.
         /// </summary>
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden actualizar oportunidades
+        [Authorize(Roles = "admin")] // Solo los administradores pueden actualizar oportunidades
         public async Task<IActionResult> Update(int id, [FromBody] OpportunityCreateDto opportunityCreateDto)
         {
             var opportunity = new Opportunity
@@ -198,7 +198,7 @@ namespace FundacionAntivirus.Controllers
         /// Elimina una oportunidad por ID.
         /// </summary>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden eliminar oportunidades
+        [Authorize(Roles = "admin")] // Solo los administradores pueden eliminar oportunidades
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _opportunityService.DeleteOpportunityAsync(id);

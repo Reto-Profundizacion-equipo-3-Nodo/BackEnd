@@ -19,14 +19,14 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,User")] // Admin y User pueden ver todas las oportunidades
+        [Authorize(Roles = "admin,user")] // Admin y User pueden ver todas las oportunidades
         public async Task<ActionResult<IEnumerable<OpportunityInstitution>>> GetAll()
         {
             return Ok(await _service.GetAllAsync());
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,User")] // Admin y User pueden ver una oportunidad por ID
+        [Authorize(Roles = "admin,user")] // Admin y User pueden ver una oportunidad por ID
         public async Task<ActionResult<OpportunityInstitution>> GetById(int id)
         {
             var institution = await _service.GetByIdAsync(id);
@@ -35,7 +35,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden crear nuevas oportunidades
+        [Authorize(Roles = "admin")] // Solo los administradores pueden crear nuevas oportunidades
         public async Task<ActionResult<OpportunityInstitution>> Create(OpportunityInstitution institution)
         {
             var newInstitution = await _service.AddAsync(institution);
@@ -43,7 +43,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden actualizar oportunidades
+        [Authorize(Roles = "admin")] // Solo los administradores pueden actualizar oportunidades
         public async Task<ActionResult<OpportunityInstitution>> Update(int id, OpportunityInstitution institution)
         {
             var updatedInstitution = await _service.UpdateAsync(id, institution);
@@ -52,7 +52,7 @@ namespace FundacionAntivirus.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")] // Solo los administradores pueden eliminar oportunidades
+        [Authorize(Roles = "admin")] // Solo los administradores pueden eliminar oportunidades
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _service.DeleteAsync(id);

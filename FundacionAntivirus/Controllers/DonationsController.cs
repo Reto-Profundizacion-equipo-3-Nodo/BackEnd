@@ -22,7 +22,7 @@ public class DonationsController : ControllerBase
     /// Obtiene todas las donaciones.
     /// </summary>
     [HttpGet]
-    [Authorize(Roles = "Admin")] // Solo los administradores pueden ver todas las donaciones
+    [Authorize(Roles = "admin")] // Solo los administradores pueden ver todas las donaciones
     public async Task<IActionResult> GetAllDonations()
     {
         var response = await _donationRepository.GetAllDonations();
@@ -39,7 +39,7 @@ public class DonationsController : ControllerBase
     /// Obtiene una donación por su ID.
     /// </summary>
     [HttpGet("{id}")]
-    [Authorize(Roles = "Admin,User")] // Admin puede ver todas, User solo puede ver las suyas
+    [Authorize(Roles = "admin,user")] // admin puede ver todas, User solo puede ver las suyas
     public async Task<IActionResult> GetByIdDonation(int id)
     {
         var response = await _donationRepository.GetByIdDonation(id);
@@ -62,7 +62,7 @@ public class DonationsController : ControllerBase
     /// Crea una nueva donación.
     /// </summary>
     [HttpPost("create")]
-    [Authorize(Roles = "Admin,User")] // Tanto Admin como User pueden donar
+    [Authorize(Roles = "admin,user")] // Tanto admin como User pueden donar
     public async Task<IActionResult> CreateDonation([FromBody] DonationDto donationDto)
     {
         if (donationDto.UserId <= 0)
@@ -90,7 +90,7 @@ public class DonationsController : ControllerBase
     /// Actualiza una donación existente.
     /// </summary>
     [HttpPut("actualizar/{id}")]
-    [Authorize(Roles = "Admin,User")] // Admin puede actualizar cualquier donación, User solo las suyas
+    [Authorize(Roles = "admin,user")] // admin puede actualizar cualquier donación, User solo las suyas
     public async Task<IActionResult> UpdateDonation(int id, [FromBody] DonationDto donationDto)
     {
         if (donationDto.UserId <= 0)
@@ -132,7 +132,7 @@ public class DonationsController : ControllerBase
     /// Elimina una donación por su ID.
     /// </summary>
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")] // Solo los administradores pueden eliminar donaciones
+    [Authorize(Roles = "admin")] // Solo los administradores pueden eliminar donaciones
     public async Task<IActionResult> DeleteDonationById(int id)
     {
         var response = await _donationRepository.DeleteByIdDontion(id);
