@@ -70,6 +70,8 @@ builder.Services.AddScoped<IOpportunityRepository, OpportunityRepository>();
 
 var app = builder.Build();
 
+app.UseCors();
+
 // Configuración de Swagger UI
 app.UseSwagger();
 app.UseSwaggerUI(c =>
