@@ -1,6 +1,7 @@
 using FundacionAntivirus.Data;
 using FundacionAntivirus.Dtos;
 using FundacionAntivirus.Interfaces;
+using FundacionAntivirus.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -31,19 +32,30 @@ namespace FundacionAntivirus.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
-            var userResponse = await _authService.LoginAsync(dto);
-            if (userResponse == null)
+            try
             {
-                return Unauthorized(new { message = "Invalid username or password" });
-            }
 
-            var token = _authService.GenerateJwt(userResponse);
-            return Ok(new
+                var userResponse = await _authService.LoginAsync(dto);
+                if (userResponse == null)
+                {
+                    return Unauthorized(new { message = "Invalid username or password" });
+                }
+
+                var token = _authService.GenerateJwt(userResponse);
+                return Ok(new
+                {
+                    message = "Login successful",
+                    Token = token
+                });
+            }
+            catch (CustomConflictException ex)
             {
-                message = "Login successful",
-                Token = token
-            });
+                return Conflict(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         /// <summary>
@@ -57,15 +69,25 @@ namespace FundacionAntivirus.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var userResponse = await _authService.RegisterAsync(dto);
-            var token = _authService.GenerateJwt(userResponse);
-            return Ok(new
+            try
             {
-                message = "User registered successfully",
-                User = userResponse,
-                Token = token
-            });
+                var userResponse = await _authService.RegisterAsync(dto);
+                var token = _authService.GenerateJwt(userResponse);
+                return Ok(new
+                {
+                    message = "User registered successfully",
+                    User = userResponse,
+                    Token = token
+                });
+            }
+            catch (CustomConflictException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
     }
 }

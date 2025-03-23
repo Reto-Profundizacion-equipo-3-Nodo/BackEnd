@@ -27,22 +27,33 @@ namespace FundacionAntivirus.Services
         // Login
         public async Task<UserResponseDto> LoginAsync(UserRequestDto dto)
         {
-            //Validar si ingreso un rol permitido
-            var allowedRoles = new string[] { "admin", "user" };
-            if (!allowedRoles.Contains(dto.Rol.ToLower()))
+            try
             {
-                throw new UnauthorizedAccessException("Rol no permitido. Solo se permiten 'user' o 'admin'.");
-            }
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-            var entity = await _context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Email == dto.Email);
-            if (entity == null || !BCrypt.Net.BCrypt.Verify(dto.Password, entity.Password))
-            {
-                throw new UnauthorizedAccessException("Credencaiels invalidas");
-            }
 
-            return _mapper.Map<UserResponseDto>(entity);
+                //Validar si ingreso un rol permitido
+                var allowedRoles = new string[] { "admin", "user" };
+                if (!allowedRoles.Contains(dto.Rol.ToLower()))
+                {
+                    throw new UnauthorizedAccessException("Rol no permitido. Solo se permiten 'user' o 'admin'.");
+                }
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+                var entity = await _context.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Email == dto.Email);
+                if (entity == null || !BCrypt.Net.BCrypt.Verify(dto.Password, entity.Password))
+                {
+                    throw new UnauthorizedAccessException("Credencaiels invalidas");
+                }
+
+                return _mapper.Map<UserResponseDto>(entity);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new UnauthorizedAccessException(ex.Message);
+            }catch (Exception ex)
+            {
+                throw new Exception("Ocurrio un error al intentar loguearse" + ex.Message);
+            }
         }
         //Register
         public async Task<UserResponseDto> RegisterAsync(UserRequestDto dto)
@@ -59,7 +70,7 @@ namespace FundacionAntivirus.Services
                 .FirstOrDefaultAsync(x => x.Email == dto.Email);
             if (existingUser != null)
             {
-                throw new UnauthorizedAccessException("El usuario ya esta registrado");
+                throw new CustomConflictException("El usuario ya esta registrado");
             }
             var entity = _mapper.Map<User>(dto);
             entity.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
@@ -76,7 +87,7 @@ namespace FundacionAntivirus.Services
                 new Claim(ClaimTypes.Email, dto.Email),
                 new Claim(ClaimTypes.Role, dto.Rol.ToLower()) //Permite que token lleve la informacion del role del usuario y genere el token en minusculas
             };
-                       
+
             // Obtener la clave secreta desde la configuración y validar que no sea nula ni vacía
 
             var jwtKey = _configuration["Jwt:Key"];
