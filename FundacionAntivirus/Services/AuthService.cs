@@ -25,17 +25,11 @@ namespace FundacionAntivirus.Services
             _mapper = mapper;
         }
         // Login
-        public async Task<UserResponseDto> LoginAsync(UserRequestDto dto)
+        public async Task<UserResponseDto> LoginAsync(UserloginDto dto)
         {
             try
             {
 
-                //Validar si ingreso un rol permitido
-                var allowedRoles = new string[] { "admin", "user" };
-                if (!allowedRoles.Contains(dto.Rol.ToLower()))
-                {
-                    throw new UnauthorizedAccessException("Rol no permitido. Solo se permiten 'user' o 'admin'.");
-                }
                 var hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
                 var entity = await _context.Users
                     .AsNoTracking()

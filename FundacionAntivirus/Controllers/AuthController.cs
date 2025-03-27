@@ -26,7 +26,7 @@ namespace FundacionAntivirus.Controllers
         /// </summary>
         [HttpPost("login")]
         [AllowAnonymous] // Permite acceso sin autenticación
-        public async Task<ActionResult<UserResponseDto>> LoginAsync([FromBody] UserRequestDto dto)
+        public async Task<ActionResult<UserResponseDto>> LoginAsync([FromBody] UserloginDto dto)
         {
             if (!ModelState.IsValid)
             {
