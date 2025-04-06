@@ -1,7 +1,3 @@
-A continuación se presenta una versión ampliada y detallada del README para el backend del proyecto "Antivirus Backend", considerando tanto la descripción original como los lineamientos y requisitos técnicos establecidos en el reto. Este documento está orientado a desarrolladores que se encargarán de la implementación y mantenimiento de la lógica de negocio, la integración de la base de datos y la seguridad de la API.
-
----
-
 # Antivirus Backend
 
 Antivirus Backend es un conjunto de APIs RESTful desarrollado en **.NET 9** que forma parte del desafío "Antivirus para la Deserción". Este proyecto se encarga de gestionar la lógica de negocio, el acceso a datos y la seguridad, proporcionando un servicio robusto y escalable. La aplicación utiliza **Entity Framework Core** para interactuar con una base de datos **PostgreSQL**, implementa autenticación basada en **JWT** para proteger endpoints sensibles y se documenta de forma interactiva a través de **Swagger/OpenAPI**.
