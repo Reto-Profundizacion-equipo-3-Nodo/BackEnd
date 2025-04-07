@@ -28,7 +28,7 @@ public partial class Opportunity
     public string? Observation { get; set; }
 
     /// <summary>
-    /// Tipo de oportunidad (máximo 50 caracteres).
+    /// Tipo de oportunidad (Enum: Beca, Subsidio, Curso, Bootcamp).
     /// </summary>
     [StringLength(50, ErrorMessage = "El tipo no puede superar los 50 caracteres.")]
     public string? Type { get; set; }
@@ -83,6 +83,16 @@ public partial class Opportunity
     public int? InstitutionId { get; set; }
 
     /// <summary>
+    /// Identificador de la ubicación geográfica (Norte, Sur, Este, Oeste).
+    /// </summary>
+    public string? Location { get; set; } // Campo para ubicación (Norte, Sur, Este, Oeste)
+
+    /// <summary>
+    /// Indica si la oportunidad es gratuita o de pago.
+    /// </summary>
+    public bool IsFree { get; set; } // Campo booleano para saber si es gratuito
+
+    /// <summary>
     /// Categoría a la que pertenece esta oportunidad.
     /// </summary>
     [ForeignKey("CategoryId")]
@@ -98,4 +108,20 @@ public partial class Opportunity
     /// Lista de usuarios que han aplicado a esta oportunidad.
     /// </summary>
     public virtual ICollection<UserOpportunity> UserOpportunities { get; set; } = new List<UserOpportunity>();
+}
+
+public enum OpportunityLocation
+{
+    Norte,
+    Sur,
+    Este,
+    Oeste
+}
+
+public enum OpportunityType
+{
+    Beca,
+    Curso,
+    Bootcamp,
+    Subsidio
 }
