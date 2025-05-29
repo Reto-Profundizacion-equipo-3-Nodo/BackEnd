@@ -1,0 +1,29 @@
+# Build output
+/FundacionAntivirus/obj/
+/FundacionAntivirus/bin/
+
+# User-specific files
+.vscode/
+*.user
+*.suo
+.ntvs
+*.njsproj
+*.sln.docstates
+
+# Logs
+*.log
+logs/
+
+# Package dependencies
+packages/
+node_modules/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Fake build tool (si no usas FAKE, puedes quitarlo)
+/.fake
+
+# Migration files
+/FundacionAntivirus/Migrations/
