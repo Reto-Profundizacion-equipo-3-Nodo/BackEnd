@@ -10,7 +10,7 @@ namespace FundacionAntivirus.Config
         public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
         {
             // Inyección de dependencias
-            services.AddScoped<IUser, UserService>();
+            services.AddScoped<IUsers, UsersService>();
             
             // Configuración de la base de datos
             services.AddDbContext<AppDbContext>(options =>
